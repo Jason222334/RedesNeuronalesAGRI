@@ -1,0 +1,52 @@
+services:
+  # ─────────────────────────────────────────────
+  # Servicio 1: Backend FastAPI
+  # ─────────────────────────────────────────────
+  - type: web
+    name: agrojequete-backend
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false   # Configurar manualmente en Render dashboard
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_SERVER
+        sync: false
+      - key: MAIL_FROM_NAME
+        value: "AgroJequete Sistema"
+      - key: MAIL_STARTTLS
+        value: "True"
+      - key: MAIL_SSL_TLS
+        value: "False"
+      - key: USE_CREDENTIALS
+        value: "True"
+      - key: VALIDATE_CERTS
+        value: "True"
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+
+  # ─────────────────────────────────────────────
+  # Servicio 2: Streamlit App (Módulo IA)
+  # ─────────────────────────────────────────────
+  - type: web
+    name: agrojequete-streamlit
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: streamlit_app
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"

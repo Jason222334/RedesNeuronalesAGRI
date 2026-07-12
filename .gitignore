@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Entornos virtuales
+backend/venv/
+
+# Variables de entorno (NUNCA subir secretos)
+.env
+*.env
+!.env.example
+
+# Modelos ML entrenados (pueden ser pesados)
+backend/ml_model/arima_model.pkl
+backend/ml_model/lstm_model.h5
+backend/ml_model/cnn_lstm_model.h5
+backend/ml_model/xgboost_model.pkl
+backend/ml_model/rf_tuned.pkl
+backend/ml_model/xgb_tuned.pkl
+backend/ml_model/clasificador_plagas.pkl
+# Conservar modelo principal entrenado para producción:
+# backend/ml_model/modelo_entrenado.pkl
+
+# Outputs del módulo IA (se regeneran)
+backend/ml_model/outputs/
+
+# Archivos subidos
+backend/uploads/
+
+# Node.js / React
+node_modules/
+frontend/build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
