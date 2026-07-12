@@ -20,6 +20,7 @@ backend/venv/
 .env
 *.env
 !.env.example
+!frontend/.env
 
 # Modelos ML entrenados (pueden ser pesados)
 backend/ml_model/arima_model.pkl
