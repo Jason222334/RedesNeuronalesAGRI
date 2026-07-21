@@ -16,6 +16,7 @@ import RecuperarPassword from './pages/RecuperarPassword';
 import CambiarPassword from './pages/CambiarPassword';
 import MenuNavegacion from './components/MenuNavegacion';
 import ModuloIA from './pages/ModuloIA';
+import { API_BASE_URL } from './config';
 
 function App() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ function App() {
         // Marcamos inmediatamente para evitar que ejecuciones paralelas (StrictMode) pasen el IF
         sessionStorage.setItem('visitaRegistrada', 'pendiente'); 
         
-        axios.post(`http://localhost:8000/api/auditoria/track-visit?id_usuario=${usr.id_usuario}`)
+        axios.post(`${API_BASE_URL}/api/auditoria/track-visit?id_usuario=${usr.id_usuario}`)
           .then(() => {
             sessionStorage.setItem('visitaRegistrada', 'true');
           })
@@ -110,7 +111,7 @@ function Dashboard() {
 
   const cargarRecomendaciones = async (meses) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/prediccion/recomendacion-siembra?meses_futuro=${meses}`);
+      const res = await axios.get(`${API_BASE_URL}/api/prediccion/recomendacion-siembra?meses_futuro=${meses}`);
       setRecomendaciones(res.data);
     } catch (error) {
       console.error("Error cargando recomendaciones", error);
@@ -119,7 +120,7 @@ function Dashboard() {
 
   const consultarRiesgoPlaga = async () => {
     try {
-      const res = await axios.post(`http://localhost:8000/api/prediccion/riesgo-plaga?id_cultivo=${parametros.id_cultivo}&meses_futuro=${parametros.meses_futuro}`);
+      const res = await axios.post(`${API_BASE_URL}/api/prediccion/riesgo-plaga?id_cultivo=${parametros.id_cultivo}&meses_futuro=${parametros.meses_futuro}`);
       setRiesgoPlaga(res.data);
     } catch (error) {
       console.error("Error consultando riesgo plaga", error);
@@ -128,9 +129,9 @@ function Dashboard() {
 
   const cargarDatosGrafico = async () => {
     try {
-      const resRendimiento = await axios.get('http://localhost:8000/api/reportes/rendimiento-mensual');
+      const resRendimiento = await axios.get(`${API_BASE_URL}/api/reportes/rendimiento-mensual`);
       setDatosGrafico(resRendimiento.data);
-      const resCalidad = await axios.get('http://localhost:8000/api/reportes/calidad-cosechas');
+      const resCalidad = await axios.get(`${API_BASE_URL}/api/reportes/calidad-cosechas`);
       setDatosCalidad(resCalidad.data);
     } catch (error) {
       console.error("Error al cargar gráficos", error);
@@ -139,7 +140,7 @@ function Dashboard() {
 
   const cargarCultivos = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/cultivos/');
+      const res = await axios.get(`${API_BASE_URL}/api/cultivos/`);
       setCultivos(res.data);
       if (res.data.length > 0) {
         setParametros(prev => ({ ...prev, id_cultivo: res.data[0].id_cultivo }));
@@ -235,7 +236,7 @@ function Dashboard() {
 
   const calcularPrediccionAvanzada = async () => {
     try {
-      const res = await axios.post(`http://localhost:8000/api/prediccion/avanzada?id_cultivo=${parametros.id_cultivo}&hectareas=${parametros.hectareas}&meses_futuro=${parametros.meses_futuro}&trans=${parametros.trans}&id_usuario=${usuario.id_usuario}`);
+      const res = await axios.post(`${API_BASE_URL}/api/prediccion/avanzada?id_cultivo=${parametros.id_cultivo}&hectareas=${parametros.hectareas}&meses_futuro=${parametros.meses_futuro}&trans=${parametros.trans}&id_usuario=${usuario.id_usuario}`);
       setResultadoAvanzado(res.data);
       setClimaAsumido(res.data.clima_asumido);
       setMostrarBotonDescarga(true);
@@ -245,16 +246,16 @@ function Dashboard() {
   };
 
   const descargarReporte = () => {
-    window.open('http://localhost:8000/api/reportes/cosechas/csv', '_blank');
+    window.open(`${API_BASE_URL}/api/reportes/cosechas/csv`, '_blank');
   };
 
   const descargarExcel = () => {
-    window.open('http://localhost:8000/api/reportes/cosechas/excel', '_blank');
+    window.open(`${API_BASE_URL}/api/reportes/cosechas/excel`, '_blank');
   };
 
   const descargarPDF = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/reportes/cosechas/json');
+      const res = await axios.get(`${API_BASE_URL}/api/reportes/cosechas/json`);
       const doc = new jsPDF();
       doc.text("Reporte Operacional de Cosechas", 14, 22);
       const tableRows = res.data.map(row => [row.fecha, row.rendimiento, row.calidad]);

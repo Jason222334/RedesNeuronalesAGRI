@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
-// Configuración base. Aquí pones la URL de tu backend en FastAPI
+// Configuración base dinámica
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: `${API_BASE_URL}/api`,
 });
 
 // Exportamos todas las funciones que se comunican con el backend

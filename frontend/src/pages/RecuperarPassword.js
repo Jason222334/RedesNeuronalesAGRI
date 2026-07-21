@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 import './Login.css';
 
 function RecuperarPassword() {
@@ -16,7 +17,7 @@ function RecuperarPassword() {
     setDebugLink('');
     
     try {
-      const res = await axios.post('http://localhost:8000/api/auth/solicitar-recuperacion', { correo });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/solicitar-recuperacion`, { correo });
       setMensaje(res.data.mensaje);
       if (res.data.link_debug) {
         setDebugLink(res.data.link_debug);

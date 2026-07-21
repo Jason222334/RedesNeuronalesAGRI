@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 function GestionDatos() {
   const [archivos, setArchivos] = useState([]);
@@ -50,7 +51,7 @@ function GestionDatos() {
 
   const cargarArchivos = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/archivos/');
+      const res = await axios.get(`${API_BASE_URL}/api/archivos/`);
       setArchivos(res.data);
     } catch (error) {
       console.error("Error al cargar archivos", error);
@@ -66,7 +67,7 @@ function GestionDatos() {
 
     setSubiendo(true);
     try {
-      await axios.post('http://localhost:8000/api/archivos/upload', formData, {
+      await axios.post(`${API_BASE_URL}/api/archivos/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       alert("Archivo subido exitosamente");
@@ -81,7 +82,7 @@ function GestionDatos() {
   const verDetalle = async (id) => {
     setCargandoDetalle(true);
     try {
-      const res = await axios.get(`http://localhost:8000/api/archivos/${id}`);
+      const res = await axios.get(`${API_BASE_URL}/api/archivos/${id}`);
       setArchivoSeleccionado(res.data);
       setPreviewData(res.data.data || []);
       // Hacer scroll hacia abajo para ver los datos
@@ -222,7 +223,7 @@ function GestionDatos() {
           {archivoSeleccionado.tipo_archivo === 'pdf' ? (
             <div style={{ width: '100%', height: '600px', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
               <iframe 
-                src={`http://localhost:8000/api/archivos/${archivoSeleccionado.id_documento || archivoSeleccionado.id}/raw`} 
+                src={`${API_BASE_URL}/api/archivos/${archivoSeleccionado.id_documento || archivoSeleccionado.id}/raw`} 
                 width="100%" 
                 height="100%" 
                 style={{ border: 'none' }}
