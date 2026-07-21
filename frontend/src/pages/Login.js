@@ -14,12 +14,14 @@ function Login() {
   });
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
 
   const manejarSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setMensaje('');
+    setCargando(true);
     
     try {
       if (esLogin) {
@@ -36,7 +38,13 @@ function Login() {
         setEsLogin(true);
       }
     } catch (err) {
-      setError(err.response?.data?.detail || 'Ocurrió un error inesperado');
+      if (!err.response) {
+        setError(`No se pudo conectar al servidor (${API_BASE_URL}). Verifica que el backend en Render esté activo.`);
+      } else {
+        setError(err.response?.data?.detail || `Error ${err.response.status}: ${err.response.statusText}`);
+      }
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -85,8 +93,8 @@ function Login() {
             </div>
           )}
 
-          <button type="submit" className="btn-primary">
-            {esLogin ? 'Entrar al Dashboard' : 'Registrarme ahora'}
+          <button type="submit" className="btn-primary" disabled={cargando}>
+            {cargando ? 'Conectando...' : (esLogin ? 'Entrar al Dashboard' : 'Registrarme ahora')}
           </button>
         </form>
 
