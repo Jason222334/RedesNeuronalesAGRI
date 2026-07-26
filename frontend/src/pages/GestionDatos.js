@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 function GestionDatos() {
+  const { t, theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
   const [archivos, setArchivos] = useState([]);
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [subiendo, setSubiendo] = useState(false);
@@ -28,20 +31,11 @@ function GestionDatos() {
           }
           const nextProgress = prev + (100 / 180);
           
-          if (nextProgress < 15) {
-            setCurrentLog("Cargando datos históricos del Valle Jequetepeque...");
-          } else if (nextProgress < 30) {
-            setCurrentLog("Preprocesando registros y limpiando valores nulos...");
-          } else if (nextProgress < 50) {
-            setCurrentLog("Configurando hiperparámetros del modelo ARIMA...");
-          } else if (nextProgress < 75) {
-            setCurrentLog("Entrenando serie temporal y calculando coeficientes...");
-          } else if (nextProgress < 90) {
-            setCurrentLog("Validando métricas de precisión (MAPE: 4.8%)...");
-          } else if (nextProgress < 100) {
-            setCurrentLog("Serializando y guardando 'modelo_entrenado.pkl'...");
-          }
-          
+          if (nextProgress > 80) setCurrentLog('Optimizando hiperparámetros del modelo...');
+          else if (nextProgress > 50) setCurrentLog('Entrenando Random Forest y XGBoost...');
+          else if (nextProgress > 20) setCurrentLog('Procesando lags y variables exógenas...');
+          else setCurrentLog('Iniciando lectura de dataset...');
+
           return parseFloat(nextProgress.toFixed(1));
         });
       }, 1000);
@@ -91,22 +85,29 @@ function GestionDatos() {
       }, 100);
     } catch (error) {
       console.error("Error al obtener detalle", error);
-      alert("No se pudieron cargar los datos del archivo: " + (error.response?.data?.detail || error.message));
+      alert("Error al obtener detalle del archivo");
     } finally {
       setCargandoDetalle(false);
     }
   };
 
+  const iniciarReentrenamiento = () => {
+    setTrainingState('training');
+    setProgress(0);
+    setCurrentLog('Iniciando lectura de dataset...');
+  };
+
   const cardStyle = {
-    background: 'white',
+    background: isDark ? '#1e293b' : 'white',
     padding: '20px',
     borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+    boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.3)' : '0 4px 12px rgba(0,0,0,0.08)',
     width: '280px',
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    border: '1px solid #eee'
+    border: isDark ? '1px solid #334155' : '1px solid #eee',
+    color: isDark ? '#f8fafc' : '#2c3e50'
   };
 
   const btnStyle = {
@@ -120,12 +121,12 @@ function GestionDatos() {
   };
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1 style={{ color: '#1b5e20', marginBottom: '30px' }}>Gestión de Datos Históricos</h1>
+    <div style={{ padding: '40px', backgroundColor: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh' }}>
+      <h1 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginBottom: '30px' }}>Gestión de Datos Históricos</h1>
 
       <div style={{ display: 'flex', gap: '25px', marginBottom: '40px', flexWrap: 'wrap' }}>
         {/* SUBIR ARCHIVOS */}
-        <div style={{ flex: 1, minWidth: '300px', background: 'white', padding: '25px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div style={{ flex: 1, minWidth: '300px', background: isDark ? '#1e293b' : 'white', border: isDark ? '1px solid #334155' : 'none', color: isDark ? '#f8fafc' : '#333', padding: '25px', borderRadius: '15px', boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.3)' : '0 4px 12px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <h3 style={{ marginTop: 0 }}>Subir Nuevo Conjunto de Datos</h3>
             <p style={{ color: '#666', fontSize: '0.9rem' }}>Formatos aceptados: .csv, .xlsx, .xls, .pdf</p>

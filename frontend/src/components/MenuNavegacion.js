@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 function MenuNavegacion() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { lang, setLang, theme, toggleTheme, t } = useThemeAndLang();
   
   const authPaths = ['/login', '/recuperar'];
   if (authPaths.includes(location.pathname) || location.pathname.startsWith('/restablecer-password/')) {
@@ -20,38 +22,69 @@ function MenuNavegacion() {
   };
 
   const isActive = (path) => location.pathname === path;
+  const isDark = theme === 'dark';
+
+  const currentSidebarStyle = {
+    ...sidebarStyle,
+    background: isDark ? '#0b291a' : '#1b5e20',
+    borderRight: isDark ? '1px solid #1e3a29' : 'none'
+  };
 
   return (
-    <aside style={sidebarStyle}>
+    <aside style={currentSidebarStyle}>
       <div style={logoWrapper}>
         <div style={logoIcon}>🌱</div>
         <h2 style={logoStyle}>AGRO<span style={{color: '#81c784'}}>JEQUE</span></h2>
       </div>
+
+      {/* CONTROLES DE TEMA E IDIOMA */}
+      <div style={toggleContainerStyle}>
+        <div style={toggleButtonGroup}>
+          <button 
+            onClick={() => setLang('es')} 
+            style={{ ...toggleBtn, background: lang === 'es' ? '#81c784' : 'transparent', color: lang === 'es' ? '#0f291e' : '#e8f5e9' }}
+            title="Español"
+          >
+            🇪🇸 ES
+          </button>
+          <button 
+            onClick={() => setLang('en')} 
+            style={{ ...toggleBtn, background: lang === 'en' ? '#81c784' : 'transparent', color: lang === 'en' ? '#0f291e' : '#e8f5e9' }}
+            title="English"
+          >
+            🇬🇧 EN
+          </button>
+        </div>
+
+        <button onClick={toggleTheme} style={themeToggleBtn} title={isDark ? t('lightMode') : t('darkMode')}>
+          {isDark ? '☀️' : '🌙'} {isDark ? t('lightMode') : t('darkMode')}
+        </button>
+      </div>
       
       {usuario && (
         <div style={navLinks}>
-          <div style={sectionLabel}>MENÚ PRINCIPAL</div>
+          <div style={sectionLabel}>{t('mainMenu')}</div>
           <Link to="/" style={isActive('/') ? activeLinkStyle : linkStyle}>
-             Dashboard
+             {t('dashboard')}
           </Link>
           <Link to="/ia" style={isActive('/ia') ? activeLinkStyle : linkStyle}>
-            🤖 Módulo IA
+             {t('aiModule')}
           </Link>
           
           {usuario.rol === 'Admin' && (
             <>
-              <div style={sectionLabel}>ADMINISTRACIÓN</div>
+              <div style={sectionLabel}>{t('adminSection')}</div>
               <Link to="/cultivos" style={isActive('/cultivos') ? activeLinkStyle : linkStyle}>
-                 Gestión Cultivos
+                 {t('cropManagement')}
               </Link>
               <Link to="/usuarios" style={isActive('/usuarios') ? activeLinkStyle : linkStyle}>
-                 Usuarios
+                 {t('users')}
               </Link>
               <Link to="/datos" style={isActive('/datos') ? activeLinkStyle : linkStyle}>
-                 Gestión Datos
+                 {t('dataManagement')}
               </Link>
               <Link to="/auditoria" style={isActive('/auditoria') ? activeLinkStyle : linkStyle}>
-                 Auditoría
+                 {t('audit')}
               </Link>
             </>
           )}
@@ -62,14 +95,14 @@ function MenuNavegacion() {
         {usuario && (
           <>
             <div style={userBadge}>
-              <div style={userAvatar}>{usuario.nombres[0]}</div>
+              <div style={userAvatar}>{usuario.nombres ? usuario.nombres[0] : 'U'}</div>
               <div style={userInfo}>
                 <span style={userName}>{usuario.nombres}</span>
                 <span style={userRole}>{usuario.rol}</span>
               </div>
             </div>
             <button onClick={cerrarSesion} style={logoutBtn}>
-              Cerrar Sesión
+              {t('logout')}
             </button>
           </>
         )}
@@ -77,6 +110,48 @@ function MenuNavegacion() {
     </aside>
   );
 }
+
+const toggleContainerStyle = {
+  padding: '0 20px 20px 20px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+};
+
+const toggleButtonGroup = {
+  display: 'flex',
+  background: 'rgba(0,0,0,0.2)',
+  borderRadius: '8px',
+  padding: '3px',
+  gap: '2px',
+};
+
+const toggleBtn = {
+  flex: 1,
+  border: 'none',
+  padding: '6px 0',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  fontSize: '0.8rem',
+  fontWeight: 'bold',
+  transition: 'all 0.2s ease',
+};
+
+const themeToggleBtn = {
+  background: 'rgba(255,255,255,0.12)',
+  color: 'white',
+  border: 'none',
+  padding: '8px 12px',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  fontSize: '0.85rem',
+  fontWeight: '600',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '6px',
+  transition: 'all 0.2s ease',
+};
 
 const sidebarStyle = {
   width: '260px',

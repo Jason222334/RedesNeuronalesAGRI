@@ -17,10 +17,13 @@ import CambiarPassword from './pages/CambiarPassword';
 import MenuNavegacion from './components/MenuNavegacion';
 import ModuloIA from './pages/ModuloIA';
 import { API_BASE_URL } from './config';
+import { useThemeAndLang } from './context/ThemeAndLangContext';
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
 
   const authPaths = ['/login', '/recuperar'];
 
@@ -57,9 +60,10 @@ function App() {
       <main style={{ 
         flex: 1, 
         marginLeft: showSidebar ? '260px' : '0', 
-        transition: 'margin-left 0.3s ease',
+        transition: 'all 0.3s ease',
         width: '100%',
-        background: '#f8f9fa'
+        background: isDark ? '#0f172a' : '#f8f9fa',
+        color: isDark ? '#f8fafc' : '#2c3e50'
       }}>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -79,6 +83,9 @@ function App() {
 }
 
 function Dashboard() {
+  const { t, theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
+  
   const [prediccion, setPrediccion] = useState(null);
   const [cultivos, setCultivos] = useState([]);
   const [datosGrafico, setDatosGrafico] = useState([]);
@@ -287,17 +294,26 @@ function Dashboard() {
   const COLORES_BAR = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c'];
 
   const cardStyle = {
-    background: 'white', padding: '25px', borderRadius: '15px',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.05)', border: '1px solid #f0f0f0',
-    flex: 1, transition: 'transform 0.3s ease'
+    background: isDark ? '#1e293b' : 'white',
+    padding: '25px', borderRadius: '15px',
+    boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.3)' : '0 10px 25px rgba(0,0,0,0.05)',
+    border: isDark ? '1px solid #334155' : '1px solid #f0f0f0',
+    color: isDark ? '#f8fafc' : '#2c3e50',
+    flex: 1, transition: 'all 0.3s ease'
   };
 
   const cardTitleStyle = {
-    marginTop: 0, color: '#2c3e50', borderBottom: '2px solid #4caf50',
+    marginTop: 0, color: isDark ? '#4ade80' : '#2c3e50', borderBottom: '2px solid #4caf50',
     paddingBottom: '10px', display: 'inline-block', marginBottom: '20px'
   };
 
-  const inputStyle = { marginLeft: '10px', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', width: '150px' };
+  const inputStyle = {
+    marginLeft: '10px', padding: '8px', borderRadius: '6px',
+    border: isDark ? '1px solid #334155' : '1px solid #ddd',
+    background: isDark ? '#0f172a' : 'white',
+    color: isDark ? '#f8fafc' : '#333',
+    width: '150px'
+  };
 
   const btnStyle = {
     background: 'linear-gradient(to right, #43a047, #2e7d32)', color: 'white',
@@ -308,57 +324,57 @@ function Dashboard() {
   if (!usuario) return null;
 
   return (
-    <div style={{ padding: '40px', fontFamily: 'Segoe UI, Roboto, sans-serif', backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
-      <h1 style={{ color: '#1b5e20', marginBottom: '30px', fontWeight: 'bold' }}>Dashboard: Sistema Inteligente de Gestión Agrícola</h1>
+    <div style={{ padding: '40px', fontFamily: 'Segoe UI, Roboto, sans-serif', backgroundColor: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh' }}>
+      <h1 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginBottom: '30px', fontWeight: 'bold' }}>{t('dashboardTitle')}</h1>
 
-      <div style={{ display: 'flex', gap: '25px', marginBottom: '40px' }}>
+      <div style={{ display: 'flex', gap: '25px', marginBottom: '40px', flexWrap: 'wrap' }}>
         
         {/* PANEL DE PREDICCIÓN AVANZADA */}
-        <div style={{ ...cardStyle, flex: 2 }}>
-          <h3 style={cardTitleStyle}>Calculadora de Rentabilidad y Producción (IA)</h3>
+        <div style={{ ...cardStyle, flex: 2, minWidth: '320px' }}>
+          <h3 style={cardTitleStyle}>{t('calculatorTitle')}</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-            <label style={{fontWeight: '500'}}>Cultivo Seleccionado:
+            <label style={{fontWeight: '500'}}>{t('selectedCrop')}
               <select name="id_cultivo" value={parametros.id_cultivo} onChange={manejarCambio} style={inputStyle}>
                 {cultivos.map(c => <option key={c.id_cultivo} value={c.id_cultivo}>{c.nombre_cultivo}</option>)}
               </select>
             </label>
-            <label style={{fontWeight: '500'}}>Hectáreas Sembradas:
+            <label style={{fontWeight: '500'}}>{t('plantedAcres')}
               <input type="number" name="hectareas" value={parametros.hectareas} onChange={manejarCambio} style={inputStyle} step="0.5" />
             </label>
-            <label style={{fontWeight: '500'}}>Horizonte de Venta:
+            <label style={{fontWeight: '500'}}>{t('salesHorizon')}
               <select name="meses_futuro" value={parametros.meses_futuro} onChange={manejarCambio} style={inputStyle}>
-                <option value={1}>En 1 mes</option>
-                <option value={3}>En 3 meses</option>
-                <option value={6}>En 6 meses</option>
-                <option value={12}>En 1 año</option>
+                <option value={1}>{t('in1Month')}</option>
+                <option value={3}>{t('in3Months')}</option>
+                <option value={6}>{t('in6Months')}</option>
+                <option value={12}>{t('in1Year')}</option>
               </select>
             </label>
-            <label style={{fontWeight: '500'}}>Costo Logístico (S/): 
+            <label style={{fontWeight: '500'}}>{t('logisticCost')}
               <input type="number" name="trans" value={parametros.trans} onChange={manejarCambio} style={inputStyle} />
             </label>
           </div>
-          <button onClick={calcularPrediccionAvanzada} style={btnStyle}>Generar Análisis Completo</button>
+          <button onClick={calcularPrediccionAvanzada} style={btnStyle}>{t('btnAnalyze')}</button>
           
           {resultadoAvanzado && (
-            <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#e8f5e9', borderRadius: '10px', borderLeft: '5px solid #2e7d32', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <div style={{ marginTop: '20px', padding: '20px', backgroundColor: isDark ? '#0f291e' : '#e8f5e9', borderRadius: '10px', borderLeft: '5px solid #2e7d32', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               <div>
-                <p style={{margin: 0, fontSize: '0.9rem', color: '#666'}}>Producción Estimada</p>
-                <h2 style={{color: '#2e7d32', margin: 0}}>{resultadoAvanzado.produccion_estimada} Ton.</h2>
+                <p style={{margin: 0, fontSize: '0.9rem', color: isDark ? '#a7f3d0' : '#666'}}>{t('estYield')}</p>
+                <h2 style={{color: isDark ? '#4ade80' : '#2e7d32', margin: 0}}>{resultadoAvanzado.produccion_estimada} Ton.</h2>
               </div>
               <div>
-                <p style={{margin: 0, fontSize: '0.9rem', color: '#666'}}>Precio Proyectado</p>
-                <h2 style={{color: '#2e7d32', margin: 0}}>S/ {resultadoAvanzado.precio_unidad}</h2>
+                <p style={{margin: 0, fontSize: '0.9rem', color: isDark ? '#a7f3d0' : '#666'}}>{t('projPrice')}</p>
+                <h2 style={{color: isDark ? '#4ade80' : '#2e7d32', margin: 0}}>S/ {resultadoAvanzado.precio_unidad}</h2>
               </div>
               <div>
-                <p style={{margin: 0, fontSize: '0.9rem', color: '#666'}}>Ganancia Neta Estimada</p>
-                <h2 style={{color: '#1b5e20', margin: 0}}>S/ {resultadoAvanzado.ganancia_neta}</h2>
+                <p style={{margin: 0, fontSize: '0.9rem', color: isDark ? '#a7f3d0' : '#666'}}>Ganancia Neta Estimada</p>
+                <h2 style={{color: isDark ? '#4ade80' : '#1b5e20', margin: 0}}>S/ {resultadoAvanzado.ganancia_neta}</h2>
               </div>
               <div>
-                <p style={{margin: 0, fontSize: '0.9rem', color: '#666'}}>Recomendación</p>
-                <h3 style={{color: '#1b5e20', margin: 0}}>{resultadoAvanzado.recomendacion}</h3>
+                <p style={{margin: 0, fontSize: '0.9rem', color: isDark ? '#a7f3d0' : '#666'}}>Recomendación</p>
+                <h3 style={{color: isDark ? '#81c784' : '#1b5e20', margin: 0}}>{resultadoAvanzado.recomendacion}</h3>
               </div>
               <div style={{gridColumn: 'span 2', marginTop: '10px'}}>
-                <p style={{fontSize: '0.8rem', color: '#555'}}>Clima Asumido: {climaAsumido}</p>
+                <p style={{fontSize: '0.8rem', color: isDark ? '#94a3b8' : '#555'}}>Clima Asumido: {climaAsumido}</p>
                 <button onClick={generarConstanciaPDF} style={{...btnStyle, width: '100%', marginTop: '10px'}}>Descargar Análisis en PDF</button>
               </div>
             </div>
@@ -370,36 +386,36 @@ function Dashboard() {
         
         {/* PANEL DE RIESGO DE PLAGAS */}
         <div style={{ ...cardStyle, flex: 1 }}>
-          <h3 style={cardTitleStyle}>Alerta de Riesgo (Plagas)</h3>
-          <p style={{color: '#666', fontSize: '0.9rem', marginBottom: '10px'}}>Analiza el riesgo específico por tipo de cultivo.</p>
+          <h3 style={cardTitleStyle}>{t('pestRiskAlert')}</h3>
+          <p style={{color: isDark ? '#94a3b8' : '#666', fontSize: '0.9rem', marginBottom: '10px'}}>Analiza el riesgo específico por tipo de cultivo.</p>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
-            <label style={{fontSize: '0.85rem'}}>Cultivo:
+            <label style={{fontSize: '0.85rem'}}>{t('selectedCrop')}
               <select name="id_cultivo" value={parametros.id_cultivo} onChange={manejarCambio} style={{...inputStyle, width: '100%', marginLeft: 0}}>
                 {cultivos.map(c => <option key={c.id_cultivo} value={c.id_cultivo}>{c.nombre_cultivo}</option>)}
               </select>
             </label>
-            <label style={{fontSize: '0.85rem'}}>Horizonte:
+            <label style={{fontSize: '0.85rem'}}>{t('salesHorizon')}
               <select name="meses_futuro" value={parametros.meses_futuro} onChange={manejarCambio} style={{...inputStyle, width: '100%', marginLeft: 0}}>
-                <option value={1}>Próximo mes</option>
-                <option value={3}>En 3 meses</option>
+                <option value={1}>{t('in1Month')}</option>
+                <option value={3}>{t('in3Months')}</option>
               </select>
             </label>
           </div>
           
           <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: riesgoPlaga?.probabilidad_plaga > 70 ? '#d32f2f' : riesgoPlaga?.probabilidad_plaga > 40 ? '#f57c00' : '#2e7d32' }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: riesgoPlaga?.probabilidad_plaga > 70 ? '#f87171' : riesgoPlaga?.probabilidad_plaga > 40 ? '#fbbf24' : '#4ade80' }}>
               {riesgoPlaga ? `${riesgoPlaga.probabilidad_plaga}%` : '--%'}
             </div>
-            <p style={{ fontWeight: '600', textTransform: 'uppercase', margin: 0, fontSize: '0.8rem' }}>Riesgo: {riesgoPlaga?.nivel || '---'}</p>
+            <p style={{ fontWeight: '600', textTransform: 'uppercase', margin: 0, fontSize: '0.8rem', color: isDark ? '#e2e8f0' : '#333' }}>Riesgo: {riesgoPlaga?.nivel || '---'}</p>
           </div>
           
           <button onClick={consultarRiesgoPlaga} style={{...btnStyle, width: '100%', background: 'linear-gradient(to right, #616161, #424242)'}}>
-            Verificar Alerta
+            {t('checkPestBtn')}
           </button>
           
           {riesgoPlaga && (
-            <p style={{marginTop: '10px', fontSize: '0.75rem', color: '#777', fontStyle: 'italic'}}>
+            <p style={{marginTop: '10px', fontSize: '0.75rem', color: isDark ? '#94a3b8' : '#777', fontStyle: 'italic'}}>
               Alerta para Mes {riesgoPlaga.mes_alerta} ({riesgoPlaga.clima_estimado})
             </p>
           )}
@@ -407,63 +423,62 @@ function Dashboard() {
 
         {/* ASISTENTE DE SIEMBRA */}
         <div style={{ ...cardStyle, flex: 1.5 }}>
-          <h3 style={cardTitleStyle}>Asistente de Siembra (Pre-Campaña)</h3>
-          <p style={{color: '#666', fontSize: '0.9rem', marginBottom: '10px'}}>¿Qué será más rentable cosechar en el futuro?</p>
+          <h3 style={cardTitleStyle}>{t('sowingAssistant')}</h3>
+          <p style={{color: isDark ? '#94a3b8' : '#666', fontSize: '0.9rem', marginBottom: '10px'}}>{t('sowingSub')}</p>
           
           <div style={{ marginBottom: '15px' }}>
-            <label style={{fontSize: '0.85rem'}}>Ver rentabilidad para cosecha en:
+            <label style={{fontSize: '0.85rem'}}>{t('seeProfitability')}
               <select onChange={(e) => cargarRecomendaciones(e.target.value)} style={{...inputStyle, width: 'auto'}}>
-                <option value={1}>1 mes</option>
-                <option value={3}>3 meses</option>
-                <option value={6}>6 meses</option>
-                <option value={12}>1 año</option>
+                <option value={1}>{t('in1Month')}</option>
+                <option value={3}>{t('in3Months')}</option>
+                <option value={6}>{t('in6Months')}</option>
+                <option value={12}>{t('in1Year')}</option>
               </select>
             </label>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {recomendaciones.slice(0, 3).map((rec, index) => (
-              <div key={rec.id_cultivo} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: index === 0 ? '#f1f8e9' : '#fff', borderRadius: '8px', border: '1px solid #eee' }}>
+              <div key={rec.id_cultivo} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: isDark ? (index === 0 ? '#0f291e' : '#0f172a') : (index === 0 ? '#f1f8e9' : '#fff'), borderRadius: '8px', border: isDark ? '1px solid #334155' : '1px solid #eee' }}>
                 <div>
-                  <span style={{fontWeight: 'bold', color: '#333', fontSize: '0.9rem'}}>{rec.nombre}</span>
-                  <p style={{margin: 0, fontSize: '0.7rem', color: '#777'}}>Precio est: S/ {rec.price_est || rec.precio_est}</p>
+                  <span style={{fontWeight: 'bold', color: isDark ? '#f8fafc' : '#333', fontSize: '0.9rem'}}>{rec.nombre}</span>
+                  <p style={{margin: 0, fontSize: '0.7rem', color: isDark ? '#94a3b8' : '#777'}}>{t('estimatedPrice')} S/ {rec.price_est || rec.precio_est}</p>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <span style={{ fontWeight: 'bold', color: rec.viabilidad > 20 ? '#2e7d32' : rec.viabilidad > 0 ? '#f57c00' : '#c62828', fontSize: '0.9rem' }}>
+                  <span style={{ fontWeight: 'bold', color: rec.viabilidad > 20 ? (isDark ? '#4ade80' : '#2e7d32') : rec.viabilidad > 0 ? '#fbbf24' : '#f87171', fontSize: '0.9rem' }}>
                     {rec.viabilidad > 0 ? '+' : ''}{rec.viabilidad}% ROI
                   </span>
                 </div>
               </div>
             ))}
           </div>
-          <p style={{marginTop: '10px', fontSize: '0.7rem', color: '#999'}}>*ROI ajustado según costos reales de insumos y preparación de tierra.</p>
         </div>
 
         {usuario.rol === 'Admin' && (
           <div style={{...cardStyle, flex: 1}}>
-            <h3 style={cardTitleStyle}>Gestión de Reportes</h3>
-            <p style={{color: '#666', marginBottom: '25px'}}>Descarga la bitácora operacional de cosechas y rendimientos del valle.</p>
+            <h3 style={cardTitleStyle}>{t('reportsMgmt')}</h3>
+            <p style={{color: isDark ? '#94a3b8' : '#666', marginBottom: '25px'}}>{t('reportsSub')}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <button onClick={descargarPDF} style={{...btnStyle, background: 'linear-gradient(to right, #e53935, #c62828)'}}>Exportar PDF</button>
-              <button onClick={descargarExcel} style={{...btnStyle, background: 'linear-gradient(to right, #1565c0, #0d47a1)'}}>Exportar Excel</button>
-              <button onClick={descargarReporte} style={{...btnStyle, background: 'linear-gradient(to right, #1b5e20, #43a047)'}}>Exportar CSV</button>
+              <button onClick={descargarPDF} style={{...btnStyle, background: 'linear-gradient(to right, #e53935, #c62828)'}}>{t('exportPdf')}</button>
+              <button onClick={descargarExcel} style={{...btnStyle, background: 'linear-gradient(to right, #1565c0, #0d47a1)'}}>{t('exportExcel')}</button>
+              <button onClick={descargarReporte} style={{...btnStyle, background: 'linear-gradient(to right, #1b5e20, #43a047)'}}>{t('exportCsv')}</button>
             </div>
           </div>
         )}
       </div>
 
-      <h2 style={{ color: '#2c3e50', marginBottom: '25px' }}>Inteligencia de Datos: Rendimientos del Valle</h2>
+      <h2 style={{ color: isDark ? '#4ade80' : '#2c3e50', marginBottom: '25px' }}>{t('dataIntelTitle')}</h2>
       
       <div style={{ display: 'flex', gap: '25px', flexWrap: 'wrap' }}>
         <div style={{ ...cardStyle, flex: 2, minWidth: '450px' }}>
-          <h3 style={{ margin: 0, color: '#2c3e50', marginBottom: '20px' }}>Tendencia de Cosechas por Mes</h3>
+          <h3 style={{ margin: 0, color: isDark ? '#4ade80' : '#2c3e50', marginBottom: '20px' }}>Tendencia de Cosechas por Mes</h3>
           <div style={{ width: '100%', height: 350 }}>
             <ResponsiveContainer>
               <BarChart data={datosGrafico}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="mes" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#334155' : '#ccc'} />
+                <XAxis dataKey="mes" stroke={isDark ? '#94a3b8' : '#666'} />
+                <YAxis stroke={isDark ? '#94a3b8' : '#666'} />
+                <Tooltip contentStyle={{ backgroundColor: isDark ? '#1e293b' : '#fff', borderColor: isDark ? '#334155' : '#ccc', color: isDark ? '#fff' : '#000' }} />
                 <Legend />
                 {cultivosConDatos.map((cultivo, index) => (
                   <Bar key={cultivo} dataKey={cultivo} fill={COLORES_BAR[index % COLORES_BAR.length]} name={cultivo} />
@@ -474,14 +489,14 @@ function Dashboard() {
         </div>
 
         <div style={{ ...cardStyle, flex: 1, minWidth: '320px' }}>
-          <h3 style={{ marginBottom: '25px', color: '#2c3e50', textAlign: 'center' }}>Calidad de Producción Actual</h3>
+          <h3 style={{ marginBottom: '25px', color: isDark ? '#4ade80' : '#2c3e50', textAlign: 'center' }}>{t('qualityTitle')}</h3>
           <div style={{ width: '100%', height: 350 }}>
             <ResponsiveContainer>
               <PieChart>
                 <Pie data={datosCalidad} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={100} label>
                   {datosCalidad.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORES_PIE[index % COLORES_PIE.length]} />)}
                 </Pie>
-                <Tooltip />
+                <Tooltip contentStyle={{ backgroundColor: isDark ? '#1e293b' : '#fff', borderColor: isDark ? '#334155' : '#ccc', color: isDark ? '#fff' : '#000' }} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

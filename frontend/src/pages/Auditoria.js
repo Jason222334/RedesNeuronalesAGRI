@@ -3,8 +3,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { API_BASE_URL } from '../config';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 export default function Auditoria() {
+  const { t, theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
   const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState([]);
@@ -49,17 +52,21 @@ export default function Auditoria() {
   };
 
   const cardStyle = {
-    background: 'white', padding: '25px', borderRadius: '15px',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.05)', border: '1px solid #f0f0f0', marginBottom: '30px'
+    background: isDark ? '#1e293b' : 'white',
+    padding: '25px', borderRadius: '15px',
+    boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.3)' : '0 10px 25px rgba(0,0,0,0.05)',
+    border: isDark ? '1px solid #334155' : '1px solid #f0f0f0',
+    color: isDark ? '#f8fafc' : '#2c3e50',
+    marginBottom: '30px'
   };
 
   const cardTitleStyle = {
-    marginTop: 0, color: '#2c3e50', borderBottom: '2px solid #4caf50',
+    marginTop: 0, color: isDark ? '#4ade80' : '#2c3e50', borderBottom: '2px solid #4caf50',
     paddingBottom: '10px', display: 'inline-block', marginBottom: '20px'
   };
 
   return (
-    <div style={{ padding: '40px', backgroundColor: '#f8f9fa', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
+    <div style={{ padding: '40px', backgroundColor: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
       <h1 style={{ color: '#1b5e20', marginBottom: '30px' }}>Centro de Monitoreo y Auditoría</h1>
 
       <div style={{ display: 'flex', gap: '25px', marginBottom: '30px' }}>

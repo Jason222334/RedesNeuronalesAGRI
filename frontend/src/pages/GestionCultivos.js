@@ -2,8 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 export default function GestionCultivos() {
+  const { t, theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
 
@@ -69,17 +72,18 @@ export default function GestionCultivos() {
 
   // --- ESTILOS COMPARTIDOS CON EL DASHBOARD ---
   const cardStyle = {
-    background: 'white',
+    background: isDark ? '#1e293b' : 'white',
     padding: '30px',
     borderRadius: '15px',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
-    border: '1px solid #f0f0f0',
+    boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.3)' : '0 10px 25px rgba(0,0,0,0.05)',
+    border: isDark ? '1px solid #334155' : '1px solid #f0f0f0',
+    color: isDark ? '#f8fafc' : '#2c3e50',
     marginBottom: '30px'
   };
 
   const cardTitleStyle = {
     marginTop: 0,
-    color: '#2c3e50',
+    color: isDark ? '#4ade80' : '#2c3e50',
     borderBottom: '2px solid #4caf50',
     paddingBottom: '10px',
     display: 'inline-block',
@@ -89,7 +93,9 @@ export default function GestionCultivos() {
   const inputStyle = { 
     padding: '12px', 
     borderRadius: '8px', 
-    border: '1px solid #ddd', 
+    border: isDark ? '1px solid #334155' : '1px solid #ddd', 
+    background: isDark ? '#0f172a' : 'white',
+    color: isDark ? '#f8fafc' : '#333',
     marginRight: '15px',
     width: '250px',
     fontSize: '0.95rem'

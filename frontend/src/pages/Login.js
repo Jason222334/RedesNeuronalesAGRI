@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 import './Login.css';
 
 function Login() {
+  const { lang, setLang, theme, toggleTheme, t } = useThemeAndLang();
   const [esLogin, setEsLogin] = useState(true);
   const [datos, setDatos] = useState({ 
     correo: '', 
@@ -16,6 +18,7 @@ function Login() {
   const [mensaje, setMensaje] = useState('');
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
+  const isDark = theme === 'dark';
 
   const manejarSubmit = async (e) => {
     e.preventDefault();
@@ -49,11 +52,27 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container" style={{ position: 'relative' }}>
+      {/* CONTROLES SUPERIORES DE TEMA E IDIOMA */}
+      <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <button 
+          onClick={() => setLang(lang === 'es' ? 'en' : 'es')} 
+          style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? '#f8fafc' : '#333', border: '1px solid #ccc', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}
+        >
+          {lang === 'es' ? '🇪🇸 ES' : '🇬🇧 EN'}
+        </button>
+        <button 
+          onClick={toggleTheme} 
+          style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? '#f8fafc' : '#333', border: '1px solid #ccc', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}
+        >
+          {isDark ? '☀️ Claro' : '🌙 Oscuro'}
+        </button>
+      </div>
+
       <div className="login-card">
         <div className="login-header">
-          <h1>AGRO-JEQUETE</h1>
-          <p>{esLogin ? 'Gestión Inteligente del Valle' : 'Crea tu cuenta agrícola'}</p>
+          <h1>{t('loginTitle')}</h1>
+          <p>{esLogin ? t('loginSubtitle') : t('registerSubtitle')}</p>
         </div>
 
         <form onSubmit={manejarSubmit}>
@@ -63,12 +82,12 @@ function Login() {
           {!esLogin && (
             <>
               <div className="form-group">
-                <label>Nombres</label>
+                <label>{t('names')}</label>
                 <input type="text" required placeholder="Ej. Juan"
                   onChange={e => setDatos({...datos, nombres: e.target.value})} />
               </div>
               <div className="form-group">
-                <label>Apellidos</label>
+                <label>{t('lastnames')}</label>
                 <input type="text" required placeholder="Ej. Pérez"
                   onChange={e => setDatos({...datos, apellidos: e.target.value})} />
               </div>
@@ -76,33 +95,33 @@ function Login() {
           )}
 
           <div className="form-group">
-            <label>Correo Electrónico</label>
+            <label>{t('email')}</label>
             <input type="email" required placeholder="correo@ejemplo.com"
               onChange={e => setDatos({...datos, correo: e.target.value})} />
           </div>
 
           <div className="form-group">
-            <label>Contraseña</label>
+            <label>{t('password')}</label>
             <input type="password" required placeholder="••••••••"
               onChange={e => setDatos({...datos, contrasena: e.target.value})} />
           </div>
 
           {esLogin && (
             <div className="forgot-password">
-              <Link to="/recuperar">¿Olvidaste tu contraseña?</Link>
+              <Link to="/recuperar">{t('forgotPassword')}</Link>
             </div>
           )}
 
           <button type="submit" className="btn-primary" disabled={cargando}>
-            {cargando ? 'Conectando...' : (esLogin ? 'Entrar al Dashboard' : 'Registrarme ahora')}
+            {cargando ? t('connecting') : (esLogin ? t('btnLogin') : t('btnRegister'))}
           </button>
         </form>
 
         <div className="login-footer">
           <p>
-            {esLogin ? '¿Aún no tienes cuenta?' : '¿Ya eres miembro?'}
+            {esLogin ? t('noAccount') : t('haveAccount')}
             <button onClick={() => { setEsLogin(!esLogin); setError(''); setMensaje(''); }}>
-              {esLogin ? 'Regístrate' : 'Inicia sesión'}
+              {esLogin ? t('registerNow') : t('loginNow')}
             </button>
           </p>
         </div>

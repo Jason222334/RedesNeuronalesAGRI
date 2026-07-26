@@ -2,8 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 export default function GestionUsuarios() {
+  const { t, theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
   const navigate = useNavigate();
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const [usuarios, setUsuarios] = useState([]);
@@ -75,17 +78,25 @@ export default function GestionUsuarios() {
 
   // --- ESTILOS ---
   const cardStyle = {
-    background: 'white', padding: '30px', borderRadius: '15px',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.05)', border: '1px solid #f0f0f0', marginBottom: '30px'
+    background: isDark ? '#1e293b' : 'white',
+    padding: '30px', borderRadius: '15px',
+    boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.3)' : '0 10px 25px rgba(0,0,0,0.05)',
+    border: isDark ? '1px solid #334155' : '1px solid #f0f0f0',
+    color: isDark ? '#f8fafc' : '#2c3e50',
+    marginBottom: '30px'
   };
 
   const cardTitleStyle = {
-    marginTop: 0, color: '#2c3e50', borderBottom: '2px solid #4caf50',
+    marginTop: 0, color: isDark ? '#4ade80' : '#2c3e50', borderBottom: '2px solid #4caf50',
     paddingBottom: '10px', display: 'inline-block', marginBottom: '20px'
   };
 
   const inputStyle = { 
-    padding: '12px', borderRadius: '8px', border: '1px solid #ddd', width: '200px', fontSize: '0.95rem'
+    padding: '12px', borderRadius: '8px',
+    border: isDark ? '1px solid #334155' : '1px solid #ddd',
+    background: isDark ? '#0f172a' : 'white',
+    color: isDark ? '#f8fafc' : '#333',
+    width: '200px', fontSize: '0.95rem'
   };
 
   const btnPrimary = {
@@ -95,7 +106,7 @@ export default function GestionUsuarios() {
   };
 
   return (
-    <div style={{ padding: '40px', backgroundColor: '#f8f9fa', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
+    <div style={{ padding: '40px', backgroundColor: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
       
       <div style={{...cardStyle, borderTop: idEnEdicion ? '5px solid #fbc02d' : '5px solid #2e7d32' }}>
         <h3 style={cardTitleStyle}>

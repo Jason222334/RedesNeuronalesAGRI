@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 const API = API_BASE_URL;
 
@@ -13,6 +14,9 @@ const COLORES = {
 };
 
 function ModuloIA() {
+  const { t, theme } = useThemeAndLang();
+  const isDark = theme === 'dark';
+
   const [estado, setEstado]                 = useState(null);
   const [resultadosModelos, setResultadosModelos] = useState(null);
   const [edaData, setEdaData]               = useState(null);
@@ -125,13 +129,16 @@ function ModuloIA() {
     color: 'white', border: 'none', borderRadius: '10px',
     padding: '12px 22px', cursor: 'pointer', fontWeight: '600',
     fontSize: '0.9rem', transition: 'all 0.3s ease',
-    boxShadow: `0 4px 12px ${color}40`
+    background: color, color: 'white', border: 'none',
+    padding: '10px 20px', borderRadius: '8px', cursor: 'pointer',
+    fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px',
+    fontSize: '0.9rem', transition: 'all 0.2s'
   });
   const tabBtn = (active) => ({
     padding: '10px 20px', border: 'none', cursor: 'pointer',
     borderRadius: '8px 8px 0 0',
-    background: active ? '#27ae60' : 'transparent',
-    color: active ? 'white' : '#666',
+    background: active ? '#27ae60' : (isDark ? '#334155' : '#e2e8f0'),
+    color: active ? 'white' : (isDark ? '#94a3b8' : '#64748b'),
     fontWeight: active ? '600' : '400',
     fontSize: '0.9rem', transition: 'all 0.2s'
   });
@@ -141,34 +148,34 @@ function ModuloIA() {
     fontWeight: '600', marginLeft: '8px'
   });
   const metricCard = (color = '#27ae60') => ({
-    background: `linear-gradient(135deg, ${color}15, ${color}05)`,
+    background: isDark ? '#0f172a' : `linear-gradient(135deg, ${color}15, ${color}05)`,
     border: `1px solid ${color}40`, borderRadius: '12px', padding: '18px',
     textAlign: 'center'
   });
 
   const tabs = [
-    { id: 'estado',   label: '📊 Estado' },
-    { id: 'modelos',  label: '🤖 Modelos' },
-    { id: 'cv',       label: '🔄 Cross-Val' },
-    { id: 'hp',       label: '⚙️ Hiperparáms' },
-    { id: 'stats',    label: '🔬 Tests' },
-    { id: 'reportes', label: '📄 Reportes' },
+    { id: 'estado',   label: t('tabEda') },
+    { id: 'modelos',  label: t('tabTrain') },
+    { id: 'cv',       label: t('tabCv') },
+    { id: 'hp',       label: t('tabHp') },
+    { id: 'stats',    label: t('tabStats') },
+    { id: 'reportes', label: t('tabReports') },
   ];
 
   return (
-    <div style={{ padding: '36px', fontFamily: "'Segoe UI', Roboto, sans-serif", background: '#f8f9fa', minHeight: '100vh' }}>
+    <div style={{ padding: '36px', fontFamily: "'Segoe UI', Roboto, sans-serif", background: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh' }}>
       
       {/* HEADER */}
       <div style={{ ...card, background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)', color: 'white' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>🤖 Módulo de Inteligencia Artificial</h1>
+            <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>{t('aiModuleTitle')}</h1>
             <p style={{ margin: '6px 0 0', opacity: 0.85, fontSize: '0.95rem' }}>
-              Sistema de Predicción de Precios — Valle Jequetepeque | 5 Modelos: ARIMA · RF · XGBoost · LSTM · CNN-LSTM
+              {t('aiModuleSub')}
             </p>
           </div>
           <button onClick={openStreamlit} style={btn('#4a90d9')}>
-            🌐 Abrir Streamlit App
+            🌐 Streamlit App
           </button>
         </div>
       </div>
