@@ -152,7 +152,7 @@ export default function GestionUsuarios() {
         <h3 style={cardTitleStyle}>Lista de Usuarios</h3>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ textAlign: 'left', color: '#7f8c8d', borderBottom: '2px solid #f0f2f5' }}>
+            <tr style={{ textAlign: 'left', color: isDark ? '#4ade80' : '#7f8c8d', borderBottom: isDark ? '2px solid #334155' : '2px solid #f0f2f5' }}>
               <th style={{ padding: '15px' }}>ID</th>
               <th style={{ padding: '15px' }}>Nombre Completo</th>
               <th style={{ padding: '15px' }}>Correo</th>
@@ -163,25 +163,25 @@ export default function GestionUsuarios() {
           </thead>
           <tbody>
             {usuarios.map((u, index) => (
-              <tr key={u.id_usuario} style={{ borderBottom: '1px solid #f0f2f5', backgroundColor: index % 2 === 0 ? 'white' : '#fafafa' }}>
-                <td style={{ padding: '15px', fontWeight: 'bold' }}>#{u.id_usuario}</td>
-                <td style={{ padding: '15px' }}>{u.nombres} {u.apellidos}</td>
-                <td style={{ padding: '15px' }}>{u.correo}</td>
+              <tr key={u.id_usuario} style={{ borderBottom: isDark ? '1px solid #334155' : '1px solid #f0f2f5', backgroundColor: isDark ? (index % 2 === 0 ? '#1e293b' : '#0f291e') : (index % 2 === 0 ? 'white' : '#fafafa'), color: isDark ? '#f8fafc' : '#2c3e50' }}>
+                <td style={{ padding: '15px', fontWeight: 'bold', color: isDark ? '#4ade80' : '#2e7d32' }}>#{u.id_usuario}</td>
+                <td style={{ padding: '15px', color: isDark ? '#f8fafc' : '#333' }}>{u.nombres} {u.apellidos}</td>
+                <td style={{ padding: '15px', color: isDark ? '#cbd5e1' : '#555' }}>{u.correo}</td>
                 <td style={{ padding: '15px' }}>
                   <span style={{ 
-                    background: u.rol === 'Admin' ? '#e8f5e9' : '#e3f2fd', 
-                    color: u.rol === 'Admin' ? '#2e7d32' : '#1976d2',
+                    background: u.rol === 'Admin' ? (isDark ? '#0f291e' : '#e8f5e9') : (isDark ? '#1e3a8a' : '#e3f2fd'), 
+                    color: u.rol === 'Admin' ? (isDark ? '#4ade80' : '#2e7d32') : (isDark ? '#60a5fa' : '#1976d2'),
                     padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold'
                   }}>
                     {u.rol}
                   </span>
                 </td>
                 <td style={{ padding: '15px' }}>
-                  {u.estado ? <span style={{color: 'green'}}>● Activo</span> : <span style={{color: 'red'}}>● Inactivo</span>}
+                  {u.estado ? <span style={{color: isDark ? '#4ade80' : 'green'}}>● Activo</span> : <span style={{color: isDark ? '#f87171' : 'red'}}>● Inactivo</span>}
                 </td>
                 <td style={{ padding: '15px', textAlign: 'center' }}>
-                  <button onClick={() => prepararEdicion(u)} style={{ background: '#fbc02d', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', marginRight: '5px' }}>Editar</button>
-                  <button onClick={() => eliminarUsuario(u.id_usuario)} style={{ background: '#d32f2f', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}>Eliminar</button>
+                  <button onClick={() => prepararEdicion(u)} style={{ background: '#fbc02d', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', marginRight: '5px', fontWeight: 'bold' }}>Editar</button>
+                  <button onClick={() => eliminarUsuario(u.id_usuario)} style={{ background: '#d32f2f', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Eliminar</button>
                 </td>
               </tr>
             ))}

@@ -180,7 +180,7 @@ export default function GestionCultivos() {
         <h3 style={cardTitleStyle}>Catálogo de Cultivos Registrados</h3>
         <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
           <thead>
-            <tr style={{ textAlign: 'left', color: '#7f8c8d', borderBottom: '2px solid #f0f2f5' }}>
+            <tr style={{ textAlign: 'left', color: isDark ? '#4ade80' : '#7f8c8d', borderBottom: isDark ? '2px solid #334155' : '2px solid #f0f2f5' }}>
               <th style={{ padding: '15px' }}>ID</th>
               <th style={{ padding: '15px' }}>Nombre del Cultivo</th>
               <th style={{ padding: '15px' }}>Ciclo de Vida (Días)</th>
@@ -189,10 +189,10 @@ export default function GestionCultivos() {
           </thead>
           <tbody>
             {cultivos.map((c, index) => (
-              <tr key={c.id_cultivo} style={{ borderBottom: '1px solid #f0f2f5', backgroundColor: index % 2 === 0 ? 'white' : '#fafafa' }}>
-                <td style={{ padding: '15px', fontWeight: 'bold', color: '#2e7d32' }}>#{c.id_cultivo}</td>
-                <td style={{ padding: '15px', fontSize: '1.05rem' }}>{c.nombre_cultivo}</td>
-                <td style={{ padding: '15px' }}>{c.tiempo_estimado_cosecha_dias} días</td>
+              <tr key={c.id_cultivo} style={{ borderBottom: isDark ? '1px solid #334155' : '1px solid #f0f2f5', backgroundColor: isDark ? (index % 2 === 0 ? '#1e293b' : '#0f291e') : (index % 2 === 0 ? 'white' : '#fafafa'), color: isDark ? '#f8fafc' : '#2c3e50' }}>
+                <td style={{ padding: '15px', fontWeight: 'bold', color: isDark ? '#4ade80' : '#2e7d32' }}>#{c.id_cultivo}</td>
+                <td style={{ padding: '15px', fontSize: '1.05rem', color: isDark ? '#f8fafc' : '#333' }}>{c.nombre_cultivo}</td>
+                <td style={{ padding: '15px', color: isDark ? '#cbd5e1' : '#555' }}>{c.tiempo_estimado_cosecha_dias} días</td>
                 <td style={{ padding: '15px', textAlign: 'center' }}>
                   <button onClick={() => prepararEdicion(c)} style={btnEdit}>Editar</button>
                   <button onClick={() => eliminarCultivo(c.id_cultivo)} style={btnDelete}>Eliminar</button>

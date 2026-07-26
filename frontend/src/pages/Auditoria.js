@@ -67,7 +67,7 @@ export default function Auditoria() {
 
   return (
     <div style={{ padding: '40px', backgroundColor: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
-      <h1 style={{ color: '#1b5e20', marginBottom: '30px' }}>Centro de Monitoreo y Auditoría</h1>
+      <h1 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginBottom: '30px' }}>Centro de Monitoreo y Auditoría</h1>
 
       <div style={{ display: 'flex', gap: '25px', marginBottom: '30px' }}>
         {/* INDICADOR DE VISITAS DIARIAS */}
@@ -75,12 +75,12 @@ export default function Auditoria() {
           <h3 style={cardTitleStyle}>Visitas Diarias</h3>
           <div style={{ marginBottom: '15px' }}>
             <input type="date" value={fechaConsulta} onChange={manejarCambioFecha} 
-              style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }} />
+              style={{ padding: '8px', borderRadius: '6px', border: isDark ? '1px solid #334155' : '1px solid #ddd', background: isDark ? '#0f172a' : 'white', color: isDark ? '#f8fafc' : '#333' }} />
           </div>
-          <div style={{ fontSize: '3rem', fontWeight: 'bold', color: '#2e7d32' }}>
+          <div style={{ fontSize: '3rem', fontWeight: 'bold', color: isDark ? '#4ade80' : '#2e7d32' }}>
             {visitasDia}
           </div>
-          <p style={{ color: '#666', margin: 0 }}>Visitas registradas el {fechaConsulta}</p>
+          <p style={{ color: isDark ? '#94a3b8' : '#666', margin: 0 }}>Visitas registradas el {fechaConsulta}</p>
         </div>
 
         {/* GRÁFICO DE TENDENCIA */}
@@ -89,10 +89,10 @@ export default function Auditoria() {
           <div style={{ width: '100%', height: 200 }}>
             <ResponsiveContainer>
               <BarChart data={stats}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="fecha" tick={{fontSize: 10}} />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#334155' : '#ccc'} />
+                <XAxis dataKey="fecha" tick={{fontSize: 10, fill: isDark ? '#94a3b8' : '#666'}} />
+                <YAxis tick={{fill: isDark ? '#94a3b8' : '#666'}} />
+                <Tooltip contentStyle={{ backgroundColor: isDark ? '#1e293b' : '#fff', borderColor: isDark ? '#334155' : '#ccc', color: isDark ? '#fff' : '#000' }} />
                 <Bar dataKey="visitas" fill="#4caf50" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -105,8 +105,8 @@ export default function Auditoria() {
         <h3 style={cardTitleStyle}>Historial de Actividad del Sistema</h3>
         <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
-              <tr style={{ textAlign: 'left', color: '#7f8c8d', borderBottom: '2px solid #f0f2f5' }}>
+            <thead style={{ position: 'sticky', top: 0, background: isDark ? '#0f172a' : 'white', zIndex: 1 }}>
+              <tr style={{ textAlign: 'left', color: isDark ? '#4ade80' : '#7f8c8d', borderBottom: isDark ? '2px solid #334155' : '2px solid #f0f2f5' }}>
                 <th style={{ padding: '15px' }}>Fecha y Hora</th>
                 <th style={{ padding: '15px' }}>Usuario</th>
                 <th style={{ padding: '15px' }}>Módulo</th>
@@ -115,17 +115,17 @@ export default function Auditoria() {
             </thead>
             <tbody>
               {logs.map((log, index) => (
-                <tr key={log.id} style={{ borderBottom: '1px solid #f0f2f5', backgroundColor: index % 2 === 0 ? 'white' : '#fafafa' }}>
-                  <td style={{ padding: '15px', color: '#666', fontSize: '0.9rem' }}>
+                <tr key={log.id} style={{ borderBottom: isDark ? '1px solid #334155' : '1px solid #f0f2f5', backgroundColor: isDark ? (index % 2 === 0 ? '#1e293b' : '#0f291e') : (index % 2 === 0 ? 'white' : '#fafafa'), color: isDark ? '#f8fafc' : '#2c3e50' }}>
+                  <td style={{ padding: '15px', color: isDark ? '#94a3b8' : '#666', fontSize: '0.9rem' }}>
                     {new Date(log.fecha).toLocaleString()}
                   </td>
-                  <td style={{ padding: '15px', fontWeight: '600' }}>{log.usuario}</td>
+                  <td style={{ padding: '15px', fontWeight: '600', color: isDark ? '#f8fafc' : '#333' }}>{log.usuario}</td>
                   <td style={{ padding: '15px' }}>
                     <span style={{ 
-                      background: '#f0f2f5', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' 
+                      background: isDark ? '#0f291e' : '#f0f2f5', color: isDark ? '#4ade80' : '#333', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' 
                     }}>{log.modulo}</span>
                   </td>
-                  <td style={{ padding: '15px', color: '#444' }}>{log.accion}</td>
+                  <td style={{ padding: '15px', color: isDark ? '#cbd5e1' : '#444' }}>{log.accion}</td>
                 </tr>
               ))}
             </tbody>
