@@ -166,6 +166,11 @@ async def chatbot_message(req: ChatRequest):
             # Si Groq falla por cuota, intentar Gemini
             if e.code == 429 and gemini_key:
                 pass  # continuar a Gemini
+            elif e.code == 403:
+                raise HTTPException(
+                    status_code=500,
+                    detail="Groq 403: Clave API inválida. Verifica que GROQ_API_KEY en Render empieza con 'gsk_' y no tiene espacios."
+                )
             else:
                 raise HTTPException(status_code=e.code, detail=f"Groq: {err_msg}")
         except Exception as e:
