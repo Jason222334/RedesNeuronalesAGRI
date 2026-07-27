@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, STREAMLIT_URL } from '../config';
+import { API_BASE_URL } from '../config';
 import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 const API = API_BASE_URL;
@@ -114,9 +114,7 @@ function ModuloIA() {
     window.open(`${API}/api/ia/reporte/${tipo}`, '_blank');
   };
 
-  const openStreamlit = () => {
-    window.open(STREAMLIT_URL, '_blank');
-  };
+
 
   // Styles
   const card = {
@@ -171,16 +169,11 @@ function ModuloIA() {
       
       {/* HEADER */}
       <div style={{ ...card, background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)', color: 'white' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>{t('aiModuleTitle')}</h1>
-            <p style={{ margin: '6px 0 0', opacity: 0.85, fontSize: '0.95rem' }}>
-              {t('aiModuleSub')}
-            </p>
-          </div>
-          <button onClick={openStreamlit} style={btn('#4a90d9')}>
-            🌐 Streamlit App
-          </button>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '700' }}>{t('aiModuleTitle')}</h1>
+          <p style={{ margin: '6px 0 0', opacity: 0.85, fontSize: '0.95rem' }}>
+            {t('aiModuleSub')}
+          </p>
         </div>
       </div>
 
@@ -249,10 +242,7 @@ function ModuloIA() {
             {!estado && (
               <div style={{ padding: '20px', background: isDark ? '#3a2000' : '#fff3e0', borderRadius: '12px', marginTop: '16px' }}>
                 <p style={{ margin: 0, color: isDark ? '#fbc02d' : '#e65100' }}>
-                  ⚠️ No se pudo conectar al backend (puerto 8000). Asegúrate de que FastAPI esté corriendo.
-                </p>
-                <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: isDark ? '#94a3b8' : '#666' }}>
-                  Usa el botón <strong>"🌐 Abrir Streamlit App"</strong> para el módulo de análisis independiente.
+                  ⚠️ No se pudo conectar al backend. Asegúrate de que FastAPI esté corriendo.
                 </p>
               </div>
             )}
@@ -621,27 +611,6 @@ function ModuloIA() {
                   </button>
                 </div>
               ))}
-            </div>
-
-            {/* Acceso a Streamlit */}
-            <div style={{ 
-              padding: '24px', borderRadius: '16px', 
-              background: isDark ? '#0f291e' : 'linear-gradient(135deg, #4a90d910, #4a90d920)',
-              border: isDark ? '1px solid #2e7d32' : '1px solid #4a90d940', textAlign: 'center'
-            }}>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🌐</div>
-              <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50', margin: '0 0 8px' }}>Análisis Completo en Streamlit</h3>
-              <p style={{ color: isDark ? '#94a3b8' : '#666', marginBottom: '16px', fontSize: '0.9rem' }}>
-                Para ejecutar el pipeline completo interactivamente (EDA → Entrenamiento → CV → Hiperparámetros → Tests → Reportes)
-              </p>
-              <button onClick={openStreamlit} style={btn('#4a90d9')}>
-                🚀 Abrir Streamlit App (puerto 8501)
-              </button>
-              <p style={{ color: isDark ? '#94a3b8' : '#999', fontSize: '0.8rem', marginTop: '10px' }}>
-                Ejecuta: <code style={{ background: isDark ? '#0f172a' : '#f5f5f5', color: isDark ? '#4ade80' : '#333', padding: '2px 8px', borderRadius: '4px' }}>
-                  streamlit run streamlit_app/app.py
-                </code>
-              </p>
             </div>
           </div>
         )}
