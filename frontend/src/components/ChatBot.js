@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useThemeAndLang } from '../context/ThemeAndLangContext';
+import { API_BASE_URL } from '../config';
 
 /* ─────────────────────────────────────────────────
    SISTEMA PROMPT — Conocimiento completo de la app
