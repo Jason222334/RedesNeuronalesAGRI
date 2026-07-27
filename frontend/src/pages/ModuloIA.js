@@ -120,8 +120,12 @@ function ModuloIA() {
 
   // Styles
   const card = {
-    background: 'white', borderRadius: '16px', padding: '28px',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.08)', border: '1px solid #f0f0f0',
+    background: isDark ? '#1e293b' : 'white',
+    borderRadius: '16px',
+    padding: '28px',
+    boxShadow: isDark ? '0 10px 30px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.08)',
+    border: isDark ? '1px solid #334155' : '1px solid #f0f0f0',
+    color: isDark ? '#f8fafc' : '#2c3e50',
     marginBottom: '24px'
   };
   const btn = (color = '#27ae60') => ({
@@ -336,8 +340,8 @@ function ModuloIA() {
                     <h3 style={{ color: '#2c3e50', marginTop: '28px' }}>Visualizaciones</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
                       {Object.entries(resultadosModelos.figuras).map(([nombre, url]) => url && (
-                        <div key={nombre} style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid #e0e0e0' }}>
-                          <div style={{ padding: '10px 16px', background: '#f5f5f5', fontWeight: '600', fontSize: '0.85rem', color: '#555' }}>
+                        <div key={nombre} style={{ borderRadius: '12px', overflow: 'hidden', border: isDark ? '1px solid #334155' : '1px solid #e0e0e0' }}>
+                          <div style={{ padding: '10px 16px', background: isDark ? '#0f172a' : '#f5f5f5', fontWeight: '600', fontSize: '0.85rem', color: isDark ? '#f8fafc' : '#555' }}>
                             {nombre.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </div>
                           <img
