@@ -96,78 +96,28 @@ Backend: FastAPI (Python) en Render. Frontend: React en Vercel. Base de datos: P
 - Si no sabes algo específico del sistema, dilo honestamente`;
 
 /* ─────────────────────────────────────────────────
-   LLAMADA A GEMINI API (fetch directo, sin librería)
-   Modelos gratuitos disponibles (en orden de preferencia):
-   - gemini-2.0-flash     ← recomendado, modelo actual
-   - gemini-1.5-flash-latest
+   LLAMADA AL BACKEND — El backend llama a Gemini
+   con la API key almacenada segura en el servidor.
 ───────────────────────────────────────────────── */
-const GEMINI_MODELS = [
-  'gemini-2.0-flash',
-  'gemini-1.5-flash-latest',
-  'gemini-1.5-flash-8b',
-];
-const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-
-
-async function askGemini(historial, apiKey) {
-  // Construir contents incluyendo el system prompt como primer turno
-  const contents = [
-    {
-      role: 'user',
-      parts: [{ text: SYSTEM_PROMPT + '\n\n---\nEmpecemos. El usuario acaba de abrir el chat.' }],
-    },
-    {
-      role: 'model',
-      parts: [{ text: '¡Hola! Soy AgroBot 🌱 Tu asistente del Sistema Agrícola del Valle Jequetepeque. ¿En qué puedo ayudarte hoy?' }],
-    },
-    ...historial.map((m) => ({
-      role: m.role === 'bot' ? 'model' : 'user',
-      parts: [{ text: m.text }],
-    })),
-  ];
-
-  const body = JSON.stringify({
-    contents,
-    generationConfig: { temperature: 0.7, topP: 0.9, maxOutputTokens: 512 },
+async function askBot(historial) {
+  const res = await fetch(`${API_BASE_URL}/api/chatbot/message`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: historial }),
   });
 
-  // Intentar cada modelo en orden hasta que uno funcione
-  let lastError = null;
-  for (const model of GEMINI_MODELS) {
-    const url = `${GEMINI_BASE}/${model}:generateContent?key=${apiKey}`;
+  if (!res.ok) {
+    let detail = `Error HTTP ${res.status}`;
     try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body,
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        const msg = err?.error?.message || `HTTP ${res.status}`;
-        // Si el error es de modelo no encontrado, intentar el siguiente
-        if (msg.includes('not found') || msg.includes('not supported') || res.status === 404) {
-          lastError = new Error(msg);
-          continue;
-        }
-        throw new Error(msg);
-      }
-
-      const data = await res.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No obtuve respuesta. Intenta de nuevo.';
-    } catch (err) {
-      if (err.message?.includes('not found') || err.message?.includes('not supported')) {
-        lastError = err;
-        continue;
-      }
-      throw err;
-    }
+      const err = await res.json();
+      detail = err.detail || detail;
+    } catch (_) {}
+    throw new Error(detail);
   }
 
-  throw lastError || new Error('No se encontró ningún modelo disponible.');
+  const data = await res.json();
+  return data.response || 'Sin respuesta. Intenta de nuevo.';
 }
-
-
 
 /* ─────────────────────────────────────────────────
    COMPONENTE PRINCIPAL
@@ -191,8 +141,6 @@ export default function ChatBot() {
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
   const inputRef = useRef(null);
-
-  const apiKey = process.env.REACT_APP_GEMINI_KEY || '';
 
   // Auto-scroll al último mensaje
   useEffect(() => {
@@ -249,13 +197,6 @@ export default function ChatBot() {
     const trimmed = (text || input).trim();
     if (!trimmed || loading) return;
 
-    if (!apiKey) {
-      setError(lang === 'en'
-        ? '⚠️ API key not configured. Add REACT_APP_GEMINI_KEY to your .env.local file.'
-        : '⚠️ Clave API no configurada. Agrega REACT_APP_GEMINI_KEY en tu archivo .env.local');
-      return;
-    }
-
     setError('');
     const userMsg = { role: 'user', text: trimmed };
     const newHistory = [...messages, userMsg];
@@ -263,11 +204,11 @@ export default function ChatBot() {
     setInput('');
     setLoading(true);
 
-    // Filtrar solo los últimos 10 mensajes para no gastar tokens
+    // Solo los últimos 10 mensajes para no gastar tokens
     const histForApi = newHistory.slice(-10);
 
     try {
-      const botText = await askGemini(histForApi, apiKey);
+      const botText = await askBot(histForApi);
       const botMsg = { role: 'bot', text: botText };
       setMessages((prev) => [...prev, botMsg]);
       speak(botText);

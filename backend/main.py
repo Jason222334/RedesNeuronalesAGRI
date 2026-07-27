@@ -40,6 +40,7 @@ from ml_model.predict import predecir_precio, estimar_produccion, predecir_riesg
 # Importar todos los módulos (Routers)
 from routers import cultivos, reportes, auditoria, usuarios, archivos
 from routers import ia_analysis
+from routers import chatbot
 
 # Agregar ml_model al path de Python para que los routers puedan importar los módulos
 import sys
@@ -73,6 +74,7 @@ app.add_middleware(
 # Vincular los módulos estructurados
 app.include_router(cultivos.router)
 app.include_router(reportes.router)
+app.include_router(chatbot.router)
 app.include_router(auditoria.router)
 app.include_router(usuarios.router)
 app.include_router(archivos.router)
