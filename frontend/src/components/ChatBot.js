@@ -221,7 +221,7 @@ export default function ChatBot() {
     } finally {
       setLoading(false);
     }
-  }, [input, messages, loading, apiKey, lang, speak]);
+  }, [input, messages, loading, lang, speak]);
 
   // Voz: iniciar/detener escucha
   const toggleListen = () => {
