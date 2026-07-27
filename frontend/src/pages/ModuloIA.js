@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, STREAMLIT_URL } from '../config';
 import { useThemeAndLang } from '../context/ThemeAndLangContext';
 
 const API = API_BASE_URL;
@@ -115,7 +115,7 @@ function ModuloIA() {
   };
 
   const openStreamlit = () => {
-    window.open('http://localhost:8501', '_blank');
+    window.open(STREAMLIT_URL, '_blank');
   };
 
   // Styles
