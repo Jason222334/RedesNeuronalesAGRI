@@ -16,6 +16,7 @@ import RecuperarPassword from './pages/RecuperarPassword';
 import CambiarPassword from './pages/CambiarPassword';
 import MenuNavegacion from './components/MenuNavegacion';
 import ModuloIA from './pages/ModuloIA';
+import ChatBot from './components/ChatBot';
 import { API_BASE_URL } from './config';
 import { useThemeAndLang } from './context/ThemeAndLangContext';
 
@@ -53,6 +54,7 @@ function App() {
   }, [location.pathname]);
 
   const showSidebar = !authPaths.includes(location.pathname) && !location.pathname.startsWith('/restablecer-password/');
+  const showChatBot = showSidebar && !!localStorage.getItem('sesionAgricola');
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
@@ -75,9 +77,9 @@ function App() {
           <Route path="/datos" element={<GestionDatos />} />
           <Route path="/auditoria" element={<Auditoria />} />
           <Route path="/ia" element={<ModuloIA />} />
-
         </Routes>
       </main>
+      {showChatBot && <ChatBot />}
     </div>
   );
 }
