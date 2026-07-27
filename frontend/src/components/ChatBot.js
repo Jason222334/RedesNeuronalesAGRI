@@ -97,12 +97,20 @@ Backend: FastAPI (Python) en Render. Frontend: React en Vercel. Base de datos: P
 
 /* ─────────────────────────────────────────────────
    LLAMADA A GEMINI API (fetch directo, sin librería)
+   Modelos gratuitos disponibles (en orden de preferencia):
+   - gemini-2.0-flash     ← recomendado, modelo actual
+   - gemini-1.5-flash-latest
 ───────────────────────────────────────────────── */
-const GEMINI_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_MODELS = [
+  'gemini-2.0-flash',
+  'gemini-1.5-flash-latest',
+  'gemini-1.5-flash-8b',
+];
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+
 
 async function askGemini(historial, apiKey) {
-  // Construir contents incluyendo el system prompt como primer mensaje del modelo
+  // Construir contents incluyendo el system prompt como primer turno
   const contents = [
     {
       role: 'user',
@@ -118,27 +126,48 @@ async function askGemini(historial, apiKey) {
     })),
   ];
 
-  const res = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents,
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.9,
-        maxOutputTokens: 512,
-      },
-    }),
+  const body = JSON.stringify({
+    contents,
+    generationConfig: { temperature: 0.7, topP: 0.9, maxOutputTokens: 512 },
   });
 
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err?.error?.message || `HTTP ${res.status}`);
+  // Intentar cada modelo en orden hasta que uno funcione
+  let lastError = null;
+  for (const model of GEMINI_MODELS) {
+    const url = `${GEMINI_BASE}/${model}:generateContent?key=${apiKey}`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        const msg = err?.error?.message || `HTTP ${res.status}`;
+        // Si el error es de modelo no encontrado, intentar el siguiente
+        if (msg.includes('not found') || msg.includes('not supported') || res.status === 404) {
+          lastError = new Error(msg);
+          continue;
+        }
+        throw new Error(msg);
+      }
+
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No obtuve respuesta. Intenta de nuevo.';
+    } catch (err) {
+      if (err.message?.includes('not found') || err.message?.includes('not supported')) {
+        lastError = err;
+        continue;
+      }
+      throw err;
+    }
   }
 
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No obtuve respuesta. Intenta de nuevo.';
+  throw lastError || new Error('No se encontró ningún modelo disponible.');
 }
+
+
 
 /* ─────────────────────────────────────────────────
    COMPONENTE PRINCIPAL
