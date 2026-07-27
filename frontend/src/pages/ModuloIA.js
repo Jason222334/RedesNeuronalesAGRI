@@ -217,23 +217,23 @@ function ModuloIA() {
 
             {estado && (
               <>
-                <h3 style={{ color: '#2c3e50', marginBottom: '16px' }}>Módulos Completados</h3>
+                <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50', marginBottom: '16px' }}>Módulos Completados</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
                   {Object.entries(estado.modulos_completados).map(([key, done]) => (
                     <div key={key} style={{ 
                       padding: '14px', borderRadius: '10px', 
-                      background: done ? '#e8f5e9' : '#fff3e0',
+                      background: done ? (isDark ? '#0f291e' : '#e8f5e9') : (isDark ? '#3a2000' : '#fff3e0'),
                       border: `1px solid ${done ? '#4caf50' : '#ff9800'}`
                     }}>
                       <span style={{ fontSize: '1.2rem' }}>{done ? '✅' : '🔴'}</span>
-                      <span style={{ marginLeft: '8px', fontWeight: '500', fontSize: '0.9rem', color: '#333' }}>
+                      <span style={{ marginLeft: '8px', fontWeight: '500', fontSize: '0.9rem', color: isDark ? '#f8fafc' : '#333' }}>
                         {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </span>
                     </div>
                   ))}
                 </div>
                 
-                <div style={{ marginTop: '20px', padding: '16px', background: '#f5f5f5', borderRadius: '10px' }}>
+                <div style={{ marginTop: '20px', padding: '16px', background: isDark ? '#0f172a' : '#f5f5f5', borderRadius: '10px', border: isDark ? '1px solid #334155' : 'none' }}>
                   <strong>¿Listo para generar reportes?</strong>{' '}
                   <span style={badge(estado.listo_para_reportes ? '#27ae60' : '#e74c3c')}>
                     {estado.listo_para_reportes ? '✅ Sí' : '❌ No — entrena primero'}
@@ -243,18 +243,18 @@ function ModuloIA() {
             )}
 
             {!estado && (
-              <div style={{ padding: '20px', background: '#fff3e0', borderRadius: '12px', marginTop: '16px' }}>
-                <p style={{ margin: 0, color: '#e65100' }}>
+              <div style={{ padding: '20px', background: isDark ? '#3a2000' : '#fff3e0', borderRadius: '12px', marginTop: '16px' }}>
+                <p style={{ margin: 0, color: isDark ? '#fbc02d' : '#e65100' }}>
                   ⚠️ No se pudo conectar al backend (puerto 8000). Asegúrate de que FastAPI esté corriendo.
                 </p>
-                <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: '#666' }}>
+                <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: isDark ? '#94a3b8' : '#666' }}>
                   Usa el botón <strong>"🌐 Abrir Streamlit App"</strong> para el módulo de análisis independiente.
                 </p>
               </div>
             )}
 
             {/* Info sobre los 5 modelos */}
-            <h3 style={{ color: '#2c3e50', marginTop: '28px' }}>Los 5 Modelos del Sistema</h3>
+            <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50', marginTop: '28px' }}>Los 5 Modelos del Sistema</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px' }}>
               {[
                 { nombre: 'ARIMA(5,1,2)', tipo: 'Clásico', desc: 'Serie temporal univariada de precios del Arroz', color: '#60a5fa', icono: '📈' },
@@ -265,12 +265,12 @@ function ModuloIA() {
               ].map(m => (
                 <div key={m.nombre} style={{ 
                   padding: '18px', borderRadius: '12px', 
-                  background: `${m.color}12`, border: `1px solid ${m.color}50`
+                  background: isDark ? '#0f172a' : `${m.color}12`, border: `1px solid ${m.color}50`
                 }}>
                   <div style={{ fontSize: '1.4rem', marginBottom: '8px' }}>{m.icono}</div>
-                  <div style={{ fontWeight: '700', color: '#333', marginBottom: '4px' }}>{m.nombre}</div>
+                  <div style={{ fontWeight: '700', color: isDark ? '#f8fafc' : '#333', marginBottom: '4px' }}>{m.nombre}</div>
                   <span style={badge(m.tipo === 'Clásico' ? '#27ae60' : '#8e44ad')}>{m.tipo}</span>
-                  <p style={{ margin: '10px 0 0', fontSize: '0.85rem', color: '#666' }}>{m.desc}</p>
+                  <p style={{ margin: '10px 0 0', fontSize: '0.85rem', color: isDark ? '#cbd5e1' : '#666' }}>{m.desc}</p>
                 </div>
               ))}
             </div>
@@ -285,22 +285,22 @@ function ModuloIA() {
             {resultadosModelos ? (
               <>
                 <div style={{ 
-                  padding: '16px 20px', background: '#e8f5e9', borderRadius: '10px', 
+                  padding: '16px 20px', background: isDark ? '#0f291e' : '#e8f5e9', borderRadius: '10px', 
                   marginBottom: '24px', borderLeft: '4px solid #27ae60'
                 }}>
                   <strong>🏆 Mejor modelo:</strong>{' '}
-                  <span style={{ fontSize: '1.1rem', color: '#1b5e20', fontWeight: '700' }}>
+                  <span style={{ fontSize: '1.1rem', color: isDark ? '#4ade80' : '#1b5e20', fontWeight: '700' }}>
                     {resultadosModelos.mejor_modelo?.toUpperCase()}
                   </span>
                   <span style={badge('#27ae60')}>R² = {resultadosModelos.mejor_r2?.toFixed(4)}</span>
                 </div>
 
                 {/* Tabla comparativa */}
-                <h3 style={{ color: '#2c3e50' }}>Tabla Comparativa de Modelos</h3>
+                <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50' }}>Tabla Comparativa de Modelos</h3>
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                     <thead>
-                      <tr style={{ background: '#1b5e20', color: 'white' }}>
+                      <tr style={{ background: isDark ? '#0f172a' : '#1b5e20', color: 'white' }}>
                         {['Modelo', 'RMSE ↓', 'MAE ↓', 'R² ↑', 'MAPE % ↓', 'Tiempo (s)'].map(h => (
                           <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '600' }}>{h}</th>
                         ))}
@@ -311,17 +311,18 @@ function ModuloIA() {
                         const esMejor = m.Modelo?.toLowerCase().replace(' ', '_') === resultadosModelos.mejor_modelo;
                         return (
                           <tr key={i} style={{ 
-                            background: esMejor ? '#e8f5e9' : i % 2 === 0 ? '#fafafa' : 'white',
-                            borderBottom: '1px solid #e0e0e0'
+                            background: esMejor ? (isDark ? '#0f291e' : '#e8f5e9') : i % 2 === 0 ? (isDark ? '#1e293b' : '#fafafa') : (isDark ? '#0f172a' : 'white'),
+                            borderBottom: isDark ? '1px solid #334155' : '1px solid #e0e0e0',
+                            color: isDark ? '#f8fafc' : '#2c3e50'
                           }}>
-                            <td style={{ padding: '12px 16px', fontWeight: esMejor ? '700' : '400', color: '#333' }}>
+                            <td style={{ padding: '12px 16px', fontWeight: esMejor ? '700' : '400', color: isDark ? '#f8fafc' : '#333' }}>
                               {m.Modelo} {esMejor && <span style={badge('#27ae60')}>★ Mejor</span>}
                             </td>
-                            <td style={{ padding: '12px 16px', color: '#666' }}>{m.RMSE}</td>
-                            <td style={{ padding: '12px 16px', color: '#666' }}>{m.MAE}</td>
+                            <td style={{ padding: '12px 16px', color: isDark ? '#cbd5e1' : '#666' }}>{m.RMSE}</td>
+                            <td style={{ padding: '12px 16px', color: isDark ? '#cbd5e1' : '#666' }}>{m.MAE}</td>
                             <td style={{ padding: '12px 16px', color: '#27ae60', fontWeight: '600' }}>{m['R²']}</td>
-                            <td style={{ padding: '12px 16px', color: '#666' }}>{m['MAPE %']}%</td>
-                            <td style={{ padding: '12px 16px', color: '#666' }}>{m['Tiempo s']}s</td>
+                            <td style={{ padding: '12px 16px', color: isDark ? '#cbd5e1' : '#666' }}>{m['MAPE %']}%</td>
+                            <td style={{ padding: '12px 16px', color: isDark ? '#cbd5e1' : '#666' }}>{m['Tiempo s']}s</td>
                           </tr>
                         );
                       })}
@@ -418,21 +419,21 @@ function ModuloIA() {
                         {d.folds && (
                           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                             <thead>
-                              <tr style={{ background: '#f5f5f5' }}>
+                              <tr style={{ background: isDark ? '#0f172a' : '#f5f5f5' }}>
                                 {['Fold', 'RMSE', 'MAE', 'R²', 'Train', 'Test'].map(h => (
-                                  <th key={h} style={{ padding: '8px', textAlign: 'center', color: '#555' }}>{h}</th>
+                                  <th key={h} style={{ padding: '8px', textAlign: 'center', color: isDark ? '#4ade80' : '#555' }}>{h}</th>
                                 ))}
                               </tr>
                             </thead>
                             <tbody>
                               {d.folds.map(f => (
-                                <tr key={f.fold} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                                <tr key={f.fold} style={{ borderBottom: isDark ? '1px solid #334155' : '1px solid #e0e0e0', background: isDark ? '#1e293b' : 'white', color: isDark ? '#f8fafc' : '#333' }}>
                                   <td style={{ padding: '8px', textAlign: 'center', fontWeight: '600' }}>{f.fold}</td>
                                   <td style={{ padding: '8px', textAlign: 'center' }}>{f.RMSE}</td>
                                   <td style={{ padding: '8px', textAlign: 'center' }}>{f.MAE}</td>
                                   <td style={{ padding: '8px', textAlign: 'center', color: '#27ae60', fontWeight: '600' }}>{f['R²']}</td>
-                                  <td style={{ padding: '8px', textAlign: 'center', color: '#888', fontSize: '0.8rem' }}>{f.n_train}</td>
-                                  <td style={{ padding: '8px', textAlign: 'center', color: '#888', fontSize: '0.8rem' }}>{f.n_test}</td>
+                                  <td style={{ padding: '8px', textAlign: 'center', color: isDark ? '#94a3b8' : '#888', fontSize: '0.8rem' }}>{f.n_train}</td>
+                                  <td style={{ padding: '8px', textAlign: 'center', color: isDark ? '#94a3b8' : '#888', fontSize: '0.8rem' }}>{f.n_test}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -459,8 +460,8 @@ function ModuloIA() {
         {/* TAB: HIPERPARÁMETROS */}
         {activeTab === 'hp' && (
           <div>
-            <h2 style={{ color: '#1b5e20', marginTop: 0 }}>Ajuste de Hiperparámetros</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>
+            <h2 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginTop: 0 }}>Ajuste de Hiperparámetros</h2>
+            <p style={{ color: isDark ? '#94a3b8' : '#666', marginBottom: '20px' }}>
               Usa <strong>Optuna (búsqueda bayesiana)</strong> para RF y XGBoost, y <strong>Grid Search</strong> para ARIMA.
             </p>
             <button onClick={handleHP} disabled={loading.hp} style={btn('#8e44ad')}>
@@ -474,18 +475,18 @@ function ModuloIA() {
                     const params = hpData[key]?.best_params;
                     return params ? (
                       <div key={key} style={card}>
-                        <h3 style={{ color: '#1b5e20', marginTop: 0 }}>{label} — Mejores Parámetros</h3>
+                        <h3 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginTop: 0 }}>{label} — Mejores Parámetros</h3>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                           <thead>
-                            <tr style={{ background: '#f5f5f5' }}>
-                              <th style={{ padding: '8px', textAlign: 'left' }}>Hiperparámetro</th>
-                              <th style={{ padding: '8px', textAlign: 'right' }}>Valor Óptimo</th>
+                            <tr style={{ background: isDark ? '#0f172a' : '#f5f5f5' }}>
+                              <th style={{ padding: '8px', textAlign: 'left', color: isDark ? '#4ade80' : '#333' }}>Hiperparámetro</th>
+                              <th style={{ padding: '8px', textAlign: 'right', color: isDark ? '#4ade80' : '#333' }}>Valor Óptimo</th>
                             </tr>
                           </thead>
                           <tbody>
                             {Object.entries(params).map(([k, v]) => (
-                              <tr key={k} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                                <td style={{ padding: '8px', color: '#555' }}>{k}</td>
+                              <tr key={k} style={{ borderBottom: isDark ? '1px solid #334155' : '1px solid #e0e0e0', color: isDark ? '#f8fafc' : '#333' }}>
+                                <td style={{ padding: '8px', color: isDark ? '#cbd5e1' : '#555' }}>{k}</td>
                                 <td style={{ padding: '8px', textAlign: 'right', fontWeight: '600', color: '#27ae60' }}>{v?.toString()}</td>
                               </tr>
                             ))}
@@ -498,7 +499,7 @@ function ModuloIA() {
 
                 {hpData.arima?.mejor && (
                   <div style={{ ...card, marginBottom: '20px' }}>
-                    <h3 style={{ color: '#1b5e20', marginTop: 0 }}>ARIMA — Grid Search</h3>
+                    <h3 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginTop: 0 }}>ARIMA — Grid Search</h3>
                     <p>
                       Mejor orden: <strong>{JSON.stringify(hpData.arima.mejor.orden)}</strong> |
                       AIC: <strong>{hpData.arima.mejor.aic?.toFixed(2)}</strong> |
@@ -522,8 +523,8 @@ function ModuloIA() {
         {/* TAB: PRUEBAS ESTADÍSTICAS */}
         {activeTab === 'stats' && (
           <div>
-            <h2 style={{ color: '#1b5e20', marginTop: 0 }}>Pruebas Estadísticas de Validación</h2>
-            <p style={{ color: '#666', marginBottom: '12px' }}>
+            <h2 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginTop: 0 }}>Pruebas Estadísticas de Validación</h2>
+            <p style={{ color: isDark ? '#94a3b8' : '#666', marginBottom: '12px' }}>
               5 familias de tests: <strong>Shapiro-Wilk</strong>, <strong>Ljung-Box</strong>, <strong>Kolmogorov-Smirnov</strong>,{' '}
               <strong>Wilcoxon</strong>, <strong>Diebold-Mariano</strong>.
             </p>
@@ -544,12 +545,12 @@ function ModuloIA() {
                   if (!lista || lista.length === 0) return null;
                   return (
                     <div key={key} style={{ ...card, marginBottom: '16px' }}>
-                      <h3 style={{ color: '#2c3e50', marginTop: 0 }}>{label}</h3>
-                      <p style={{ color: '#888', fontSize: '0.85rem', marginBottom: '12px', fontStyle: 'italic' }}>{h0} (α = 0.05)</p>
+                      <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50', marginTop: 0 }}>{label}</h3>
+                      <p style={{ color: isDark ? '#94a3b8' : '#888', fontSize: '0.85rem', marginBottom: '12px', fontStyle: 'italic' }}>{h0} (α = 0.05)</p>
                       <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                           <thead>
-                            <tr style={{ background: '#1b5e20', color: 'white' }}>
+                            <tr style={{ background: isDark ? '#0f172a' : '#1b5e20', color: 'white' }}>
                               {Object.keys(lista[0]).filter(k => !['H0', 'test'].includes(k)).map(k => (
                                 <th key={k} style={{ padding: '10px', textAlign: 'left' }}>
                                   {k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -559,11 +560,11 @@ function ModuloIA() {
                           </thead>
                           <tbody>
                             {lista.map((row, i) => (
-                              <tr key={i} style={{ borderBottom: '1px solid #e0e0e0', background: i % 2 === 0 ? '#fafafa' : 'white' }}>
+                              <tr key={i} style={{ borderBottom: isDark ? '1px solid #334155' : '1px solid #e0e0e0', background: i % 2 === 0 ? (isDark ? '#1e293b' : '#fafafa') : (isDark ? '#0f172a' : 'white') }}>
                                 {Object.entries(row).filter(([k]) => !['H0', 'test'].includes(k)).map(([k, v]) => (
                                   <td key={k} style={{ 
                                     padding: '10px',
-                                    color: k === 'p_valor' && v < 0.05 ? '#c0392b' : k === 'p_valor' ? '#27ae60' : '#333',
+                                    color: k === 'p_valor' && v < 0.05 ? '#c0392b' : k === 'p_valor' ? '#27ae60' : (isDark ? '#f8fafc' : '#333'),
                                     fontWeight: k === 'p_valor' ? '600' : '400'
                                   }}>
                                     {typeof v === 'number' ? v.toFixed(4) : (v?.toString() || '-')}
@@ -593,8 +594,8 @@ function ModuloIA() {
         {/* TAB: REPORTES */}
         {activeTab === 'reportes' && (
           <div>
-            <h2 style={{ color: '#1b5e20', marginTop: 0 }}>Generación de Reportes</h2>
-            <p style={{ color: '#666', marginBottom: '24px' }}>
+            <h2 style={{ color: isDark ? '#4ade80' : '#1b5e20', marginTop: 0 }}>Generación de Reportes</h2>
+            <p style={{ color: isDark ? '#94a3b8' : '#666', marginBottom: '24px' }}>
               Descarga reportes completos con tablas comparativas, figuras e interpretaciones.
               Requiere que los modelos estén entrenados.
             </p>
@@ -609,8 +610,8 @@ function ModuloIA() {
                   <div style={{ fontSize: '3rem', marginBottom: '12px' }}>
                     {tipo === 'pdf' ? '📕' : tipo === 'excel' ? '📗' : '📘'}
                   </div>
-                  <h3 style={{ color: '#2c3e50', marginTop: 0, marginBottom: '8px' }}>{label}</h3>
-                  <p style={{ color: '#888', fontSize: '0.85rem', marginBottom: '16px' }}>{desc}</p>
+                  <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50', marginTop: 0, marginBottom: '8px' }}>{label}</h3>
+                  <p style={{ color: isDark ? '#94a3b8' : '#888', fontSize: '0.85rem', marginBottom: '16px' }}>{desc}</p>
                   <button onClick={() => handleReporte(tipo)} style={btn(color)}>
                     ⬇️ Descargar {tipo.toUpperCase()}
                   </button>
@@ -621,19 +622,19 @@ function ModuloIA() {
             {/* Acceso a Streamlit */}
             <div style={{ 
               padding: '24px', borderRadius: '16px', 
-              background: 'linear-gradient(135deg, #4a90d910, #4a90d920)',
-              border: '1px solid #4a90d940', textAlign: 'center'
+              background: isDark ? '#0f291e' : 'linear-gradient(135deg, #4a90d910, #4a90d920)',
+              border: isDark ? '1px solid #2e7d32' : '1px solid #4a90d940', textAlign: 'center'
             }}>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🌐</div>
-              <h3 style={{ color: '#2c3e50', margin: '0 0 8px' }}>Análisis Completo en Streamlit</h3>
-              <p style={{ color: '#666', marginBottom: '16px', fontSize: '0.9rem' }}>
+              <h3 style={{ color: isDark ? '#4ade80' : '#2c3e50', margin: '0 0 8px' }}>Análisis Completo en Streamlit</h3>
+              <p style={{ color: isDark ? '#94a3b8' : '#666', marginBottom: '16px', fontSize: '0.9rem' }}>
                 Para ejecutar el pipeline completo interactivamente (EDA → Entrenamiento → CV → Hiperparámetros → Tests → Reportes)
               </p>
               <button onClick={openStreamlit} style={btn('#4a90d9')}>
                 🚀 Abrir Streamlit App (puerto 8501)
               </button>
-              <p style={{ color: '#999', fontSize: '0.8rem', marginTop: '10px' }}>
-                Ejecuta: <code style={{ background: '#f5f5f5', padding: '2px 8px', borderRadius: '4px' }}>
+              <p style={{ color: isDark ? '#94a3b8' : '#999', fontSize: '0.8rem', marginTop: '10px' }}>
+                Ejecuta: <code style={{ background: isDark ? '#0f172a' : '#f5f5f5', color: isDark ? '#4ade80' : '#333', padding: '2px 8px', borderRadius: '4px' }}>
                   streamlit run streamlit_app/app.py
                 </code>
               </p>

@@ -144,10 +144,10 @@ function GestionDatos() {
         </div>
 
         {/* ENTRENAMIENTO DE IA */}
-        <div style={{ flex: 1, minWidth: '300px', background: 'white', padding: '25px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div style={{ flex: 1, minWidth: '300px', background: isDark ? '#1e293b' : 'white', border: isDark ? '1px solid #334155' : 'none', color: isDark ? '#f8fafc' : '#333', padding: '25px', borderRadius: '15px', boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.3)' : '0 4px 12px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <h3 style={{ marginTop: 0 }}>Entrenamiento de Inteligencia Artificial</h3>
-            <p style={{ color: '#666', fontSize: '0.9rem' }}>Optimiza el modelo predictivo con los últimos datos registrados.</p>
+            <p style={{ color: isDark ? '#94a3b8' : '#666', fontSize: '0.9rem' }}>Optimiza el modelo predictivo con los últimos datos registrados.</p>
           </div>
 
           <div style={{ marginTop: '15px' }}>
@@ -163,22 +163,22 @@ function GestionDatos() {
             {trainingState === 'training' && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#1b5e20' }}>Entrenando...</span>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#1b5e20' }}>{progress}%</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: isDark ? '#4ade80' : '#1b5e20' }}>Entrenando...</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: isDark ? '#4ade80' : '#1b5e20' }}>{progress}%</span>
                 </div>
-                <div style={{ width: '100%', background: '#eee', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', background: isDark ? '#334155' : '#eee', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
                   <div style={{ width: `${progress}%`, background: '#2e7d32', height: '100%', transition: 'width 0.2s ease' }} />
                 </div>
-                <p style={{ fontSize: '0.8rem', color: '#555', marginTop: '10px', fontStyle: 'italic', minHeight: '20px', margin: '10px 0 0 0' }}>
+                <p style={{ fontSize: '0.8rem', color: isDark ? '#94a3b8' : '#555', marginTop: '10px', fontStyle: 'italic', minHeight: '20px', margin: '10px 0 0 0' }}>
                   ⚙️ {currentLog}
                 </p>
               </div>
             )}
 
             {trainingState === 'finished' && (
-              <div style={{ padding: '12px', background: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #2e7d32', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span style={{ fontWeight: 'bold', color: '#1b5e20', fontSize: '0.9rem' }}>¡Modelo Listo!</span>
-                <span style={{ fontSize: '0.8rem', color: '#2e7d32' }}>Optimización completada con éxito.</span>
+              <div style={{ padding: '12px', background: isDark ? '#0f291e' : '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #2e7d32', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontWeight: 'bold', color: isDark ? '#4ade80' : '#1b5e20', fontSize: '0.9rem' }}>¡Modelo Listo!</span>
+                <span style={{ fontSize: '0.8rem', color: isDark ? '#a7f3d0' : '#2e7d32' }}>Optimización completada con éxito.</span>
                 <button 
                   onClick={() => setTrainingState('idle')} 
                   style={{ ...btnStyle, background: '#2e7d32', padding: '6px 12px', fontSize: '0.75rem', width: 'fit-content' }}
@@ -215,14 +215,14 @@ function GestionDatos() {
       </div>
 
       {archivoSeleccionado && (
-        <div style={{ background: 'white', padding: '25px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+        <div style={{ background: isDark ? '#1e293b' : 'white', border: isDark ? '1px solid #334155' : 'none', color: isDark ? '#f8fafc' : '#333', padding: '25px', borderRadius: '15px', boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.3)' : '0 4px 12px rgba(0,0,0,0.05)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ margin: 0 }}>Vista Previa: {archivoSeleccionado.nombre}</h3>
             <button onClick={() => setArchivoSeleccionado(null)} style={{ ...btnStyle, background: '#d32f2f' }}>Cerrar</button>
           </div>
           
           {archivoSeleccionado.tipo_archivo === 'pdf' ? (
-            <div style={{ width: '100%', height: '600px', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '600px', border: isDark ? '1px solid #334155' : '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
               <iframe 
                 src={`${API_BASE_URL}/api/archivos/${archivoSeleccionado.id_documento || archivoSeleccionado.id}/raw`} 
                 width="100%" 
@@ -235,9 +235,9 @@ function GestionDatos() {
             <div style={{ overflowX: 'auto', maxHeight: '500px' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                 <thead>
-                  <tr style={{ background: '#f5f5f5' }}>
+                  <tr style={{ background: isDark ? '#0f172a' : '#f5f5f5', color: isDark ? '#4ade80' : '#333' }}>
                     {previewData.length > 0 && Object.keys(previewData[0]).map(key => (
-                      <th key={key} style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>{key}</th>
+                      <th key={key} style={{ padding: '12px', border: isDark ? '1px solid #334155' : '1px solid #ddd', textAlign: 'left' }}>{key}</th>
                     ))}
                   </tr>
                 </thead>

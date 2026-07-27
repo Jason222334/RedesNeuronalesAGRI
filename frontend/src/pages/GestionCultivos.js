@@ -136,7 +136,7 @@ export default function GestionCultivos() {
   };
 
   return (
-    <div style={{ padding: '40px', backgroundColor: '#f8f9fa', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
+    <div style={{ padding: '40px', backgroundColor: isDark ? '#0f172a' : '#f8f9fa', color: isDark ? '#f8fafc' : '#2c3e50', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
       
       {/* FORMULARIO DE REGISTRO */}
       <div style={{...cardStyle, borderTop: idEnEdicion ? '5px solid #fbc02d' : '5px solid #2e7d32' }}>
