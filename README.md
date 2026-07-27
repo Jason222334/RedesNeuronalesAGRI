@@ -1,9 +1,6 @@
 # 🌾 Sistema Inteligente Agricola — Valle Jequetepeque
 > **Plataforma Web de Soporte a Decisiones Agrícolas, Predicción de Precios con Inteligencia Artificial (ML/DL) y Asistente Virtual Multimodal**  
-> *Desarrollado por: 
-GALVEZ LUNA JASON ANDERSON
-FLORIAN AREVALO JOEL ANDERSON 
-— Universidad Nacional de Trujillo (UNT)*
+> > *Desarrollado por: GALVEZ LUNA JASON ANDERSON y FLORIAN AREVALO JOEL ANDERSON — Universidad Nacional de Trujillo (UNT)*
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/Frontend-React_18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
